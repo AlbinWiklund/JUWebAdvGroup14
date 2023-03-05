@@ -36,17 +36,16 @@
 
 <style>
 	:global(body) {
-		padding: 0;
 		background-color: rgb(139, 75, 1);
-		min-height: 100%;
 	}
+
 	#sidebar{
 		list-style-type: none;
-		position: absolute;
-		left: 0%;
-		top: 0%;
+		float: left;
+		margin-left: 0;
 		background-color: bisque;
 		height: 100%;
+		padding: 10px;
 	}
 
 	#sidebar > *{

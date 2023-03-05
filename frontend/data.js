@@ -1,7 +1,33 @@
 export const accounts = [
-	{id: 1, "name": "Alice"},
-	{id: 2, "name": "Bob"},
-	{id: 3, "name": "Claire"},
+	{
+		id: 1, 
+		"username": 'albin1',
+		"password": '123',
+		"fName": 'albin',
+		"lName": 'wiklund',
+		"address": 'Smedjegatan 31',
+		"phoneNumber": '+46739305206',
+		"email": 'albin.wiklund11@gmail.com'},
+	{
+		id: 2, 
+		"name": "Bob"
+		"password": '123',
+		"fName": 'albin',
+		"lName": 'wiklund',
+		"address": 'Smedjegatan 31',
+		"phoneNumber": '+46739305206',
+		"email": 'albin.wiklund11@gmail.com'
+	},
+	{
+		id: 3, 
+		"name": "Claire"
+		"password": '123',
+		"fName": 'albin',
+		"lName": 'wiklund',
+		"address": 'Smedjegatan 31',
+		"phoneNumber": '+46739305206',
+		"email": 'albin.wiklund11@gmail.com'
+	},
 ]
 
 export const blogposts = [
