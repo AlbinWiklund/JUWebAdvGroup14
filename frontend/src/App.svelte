@@ -10,7 +10,7 @@
 
 	export let url = "";
 </script>
-
+<h1><em>Kunskapsmagasinet</em></h1>
 <Router {url}>
 	<nav>
 		<ul id="sidebar">
@@ -33,6 +33,7 @@
 		<Route path="signin" component={SignIn} />
 	</div>
 </Router>
+
 
 <style>
 	:global(body) {
