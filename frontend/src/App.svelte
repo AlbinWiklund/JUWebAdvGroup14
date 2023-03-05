@@ -1,46 +1,67 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import Counter from './lib/Counter.svelte'
+	import { Router, Link, Route } from "svelte-routing";
+	import Home from "./routes/Home.svelte";
+	import About from "./routes/About.svelte";
+	import Accounts from "./routes/Accounts.svelte";
+	import Profile from "./routes/Profile.svelte";
+	import Sell from "./routes/Sell.svelte";
+	import SignIn from "./routes/Sign-in.svelte";
+	import SignUp from "./routes/Sign-up.svelte";
+
+	export let url = "";
 </script>
 
-<main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer"> 
-      <img src="/vite.svg" class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer"> 
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
-</main>
+<Router {url}>
+	<nav>
+		<ul id="sidebar">
+			<li><Link to="/">Home</Link></li>
+			<li><Link to="about">About</Link></li>
+			<li><Link to="accounts">Accounts</Link></li>
+			<li><Link to="profile">Profile</Link></li>
+			<li><Link to="sell">Sell</Link></li>
+			<li><button id="sign-in"><Link to="signin">Sign In</Link></button></li>
+			<li><button id="sign-up"><Link to="signup">Sign Up</Link></button></li>
+		</ul>
+	</nav>
+	<div>
+		<Route path="/"><Home /></Route>
+		<Route path="about" component={About} />
+		<Route path="accounts" component={Accounts} />
+		<Route path="profile" component={Profile} />
+		<Route path="sell" component={Sell} />
+		<Route path="signup" component={SignUp} />
+		<Route path="signin" component={SignIn} />
+	</div>
+</Router>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
+	:global(body) {
+		padding: 0;
+		background-color: rgb(139, 75, 1);
+		min-height: 100%;
+	}
+	#sidebar{
+		list-style-type: none;
+		position: absolute;
+		left: 0%;
+		top: 0%;
+		background-color: bisque;
+		height: 100%;
+	}
+
+	#sidebar > *{
+		padding: 10px;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		font-weight: bold;
+	}
+
+	#sign-in{
+		background-color: rgb(139, 75, 1);
+		color: white;
+	}
+
+	#sign-up{
+		background-color: rgb(200, 120, 0);
+	}
 </style>
