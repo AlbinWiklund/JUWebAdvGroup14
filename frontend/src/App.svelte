@@ -10,9 +10,10 @@
 
 	export let url = "";
 </script>
-<h1><em>Kunskapsmagasinet</em></h1>
-<Router {url}>
-	<nav>
+<Router {url} >
+	<h1 id="title"><em>Kunskapsmagasinet</em></h1>
+
+	<nav id="menu">
 		<ul id="sidebar">
 			<li><Link to="/">Home</Link></li>
 			<li><Link to="about">About</Link></li>
@@ -23,7 +24,8 @@
 			<li><button id="sign-up"><Link to="signup">Sign Up</Link></button></li>
 		</ul>
 	</nav>
-	<div>
+
+	<main id="main">
 		<Route path="/"><Home /></Route>
 		<Route path="about" component={About} />
 		<Route path="accounts" component={Accounts} />
@@ -31,9 +33,8 @@
 		<Route path="sell" component={Sell} />
 		<Route path="signup" component={SignUp} />
 		<Route path="signin" component={SignIn} />
-	</div>
+	</main>
 </Router>
-
 
 <style>
 	:global(body) {
@@ -42,7 +43,6 @@
 
 	#sidebar{
 		list-style-type: none;
-		float: left;
 		margin-left: 0;
 		background-color: bisque;
 		height: 100%;
@@ -63,5 +63,20 @@
 
 	#sign-up{
 		background-color: rgb(200, 120, 0);
+	}
+
+	#title{
+		grid-area: top;
+	}
+
+	#menu{
+		grid-area: nav;
+		max-width: 150px;
+		min-width: 150px;
+	}
+
+	#main{
+		grid-area: main;
+		padding: 10px;
 	}
 </style>
