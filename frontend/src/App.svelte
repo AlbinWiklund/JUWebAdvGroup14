@@ -7,6 +7,8 @@
 	import Sell from "./routes/Sell.svelte";
 	import SignIn from "./routes/Sign-in.svelte";
 	import SignUp from "./routes/Sign-up.svelte";
+	import Product from "./routes/Product.svelte";
+	import Account from "./routes/Account.svelte";
 
 	export let url = "";
 </script>
@@ -16,10 +18,10 @@
 	<nav id="menu">
 		<ul id="sidebar">
 			<li><Link to="/">Home</Link></li>
-			<li><Link to="about">About</Link></li>
 			<li><Link to="accounts">Accounts</Link></li>
-			<li><Link to="profile">Profile</Link></li>
 			<li><Link to="sell">Sell</Link></li>
+			<li><Link to="profile">Profile</Link></li>
+			<li><Link to="about">About</Link></li>
 			<li><button id="sign-in"><Link to="signin">Sign In</Link></button></li>
 			<li><button id="sign-up"><Link to="signup">Sign Up</Link></button></li>
 		</ul>
@@ -33,6 +35,8 @@
 		<Route path="sell" component={Sell} />
 		<Route path="signup" component={SignUp} />
 		<Route path="signin" component={SignIn} />
+		<Route path="product" component={Product} />
+		<Route path="account" component={Account} />
 	</main>
 </Router>
 
@@ -67,16 +71,18 @@
 
 	#title{
 		grid-area: top;
+		position: fixed;
 	}
 
 	#menu{
 		grid-area: nav;
-		max-width: 150px;
-		min-width: 150px;
+		position: fixed;
+		margin-top: 105px;
 	}
 
 	#main{
 		grid-area: main;
 		padding: 10px;
+		margin: 15px;
 	}
 </style>

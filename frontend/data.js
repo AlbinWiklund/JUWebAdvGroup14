@@ -30,8 +30,8 @@ export const accounts = [
 	},
 ]
 
-export const blogposts = [
-	{id: 1, authorId: 1, "title": "Alice's adventure Part 1"},
+export const products = [
+	{id: 1, authorId: 1, "title": "Book of immortality 1"},
 	{id: 2, authorId: 2, "title": "My birthday!"},
 	{id: 3, authorId: 1, "title": "Alice's adventure Part 2"},
 ]

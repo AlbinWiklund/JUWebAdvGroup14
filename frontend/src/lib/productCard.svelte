@@ -1,9 +1,20 @@
+<script>
+  import { Link } from "svelte-routing";
+  
+  export let bookName;
+  export let productId;
+  export let profileId;
+
+  
+</script>
+
 <div class="card">
-  <div id="cardPicture"></div>
-	<div id="bookTitle" class="textInBoxes"> Title placeholder</div>
-	<div id="productLink" class="textInBoxes">Product</div>
-	<div id="profileLink" class="textInBoxes">Profile</div>
+  <div id="cardPicture"></div>	
+  <div id="bookTitle" class="textInBoxes"> {bookName}</div>
+  <div id="productLink" class="textInBoxes"> <Link to="accounts"> Profile </Link></div>
+  <div id="profileLink" class="textInBoxes"> <Link to="product"> Product </Link> </div>
 </div>
+
 
 <style>
   .card{
@@ -11,6 +22,7 @@
 		height: 350px;
 		border: 3px solid black;
 		padding: 0;
+		margin: 10px;
 		box-shadow: 5px 10px black;
 		border-radius: 2px;
 		display: grid;
