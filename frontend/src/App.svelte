@@ -11,6 +11,8 @@
 	import Account from "./routes/Account.svelte";
 
 	export let url = "";
+
+
 </script>
 <Router {url} >
 	<h1 id="title"><em>Kunskapsmagasinet</em></h1>
@@ -36,7 +38,7 @@
 		<Route path="signup" component={SignUp} />
 		<Route path="signin" component={SignIn} />
 		<Route path="product" component={Product} />
-		<Route path="account" component={Account} />
+		<Route path="account/:accountId" component={Account} />
 	</main>
 </Router>
 

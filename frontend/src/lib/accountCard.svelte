@@ -3,13 +3,14 @@
 
   export let username = "Jhon Doe";
   export let rating = "0";
+  export let accountId = 0;
   
 </script>
 
-<Link to="account">
+<Link to="account/{accountId}">
   <div class="card">
     <div id="username" class="textInBoxes"> {username} </div>
-    <div id="rating" class="textInBoxes"> {rating}/5</div>
+    <div id="rating" class="textInBoxes"> {rating}/5 </div>
   </div>
 </Link>
 

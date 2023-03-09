@@ -16,7 +16,7 @@
 <div class="container">
 	{#if accounts}
 		{#each accounts as account}
-			<Card username={account.username} rating={account.rating}/>
+			<Card username={account.username} rating={account.rating} accountId={account.id}/>
 		{/each}
 	{/if}
 </div>

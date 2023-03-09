@@ -1,0 +1,19 @@
+[
+	{
+		"id": 1,
+		"accountId": 1,
+		"pictureURL": "",
+		"description": "this is a description",
+		"catergory": "math",
+		"price": 30
+	},
+	{
+		"id": 2,
+		"accountId": 2,
+		"pictureURL": "",
+		"title": "title"
+		"description": "this is a description 2",
+		"catergory": "physics",
+		"price": 30
+	}
+]
