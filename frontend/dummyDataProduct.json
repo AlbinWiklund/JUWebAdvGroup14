@@ -3,17 +3,33 @@
 		"id": 1,
 		"accountId": 1,
 		"pictureURL": "",
+		"title": "title32",
 		"description": "this is a description",
-		"catergory": "math",
-		"price": 30
+		"category": "math",
+		"price": 30,
+		"isSold": false,
+		"buyerId": null
 	},
 	{
 		"id": 2,
 		"accountId": 2,
 		"pictureURL": "",
-		"title": "title"
+		"title": "title",
 		"description": "this is a description 2",
-		"catergory": "physics",
-		"price": 30
+		"category": "physics",
+		"price": 20,
+		"isSold": false,
+		"buyerId": null
+	},
+	{
+		"id": 3,
+		"accountId": 2,
+		"pictureURL": "",
+		"title": "title32",
+		"description": "this is a description 3",
+		"category": "physics",
+		"price": 50,
+		"isSold": false,
+		"buyerId": null
 	}
 ]

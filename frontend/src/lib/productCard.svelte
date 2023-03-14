@@ -3,7 +3,7 @@
   
   export let bookName;
   export let productId;
-  export let profileId;
+  export let accountId;
 
   
 </script>
@@ -12,7 +12,7 @@
   <div id="cardPicture"></div>	
   <div id="bookTitle" class="textInBoxes"> {bookName}</div>
   <div id="productLink" class="textInBoxes"> <Link to="accounts"> Profile </Link></div>
-  <div id="profileLink" class="textInBoxes"> <Link to="product"> Product </Link> </div>
+  <div id="profileLink" class="textInBoxes"> <Link to="book/{productId}"> Book </Link> </div>
 </div>
 
 

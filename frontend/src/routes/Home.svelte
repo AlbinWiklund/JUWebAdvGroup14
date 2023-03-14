@@ -5,7 +5,7 @@
 	let products;
 
 	async function getData(){
-		const response = await fetch('../../dummyDataBook.json');
+		const response = await fetch('../../dummyDataProduct.json');
 		const data = await response.json();
 		products = data;
 	}
@@ -15,8 +15,8 @@
 
 <div class="container">
 	{#if products}
-		{#each products as data }	
-			<Card bookName={data.title} productId={"hej"} profileId={43}/>
+		{#each products as product }	
+			<Card bookName={product.title} productId={product.id} accountId={product.accountId}/>
 		{/each}
 	{/if}
 </div>

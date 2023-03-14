@@ -9,6 +9,7 @@
 	import SignUp from "./routes/Sign-up.svelte";
 	import Product from "./routes/Product.svelte";
 	import Account from "./routes/Account.svelte";
+	import Review from "./routes/Review.svelte";
 
 	export let url = "";
 
@@ -39,6 +40,8 @@
 		<Route path="signin" component={SignIn} />
 		<Route path="product" component={Product} />
 		<Route path="account/:accountId" component={Account} />
+		<Route path="book/:productId" component={Product} />
+		<Route path="book/:productId/review" component={Review} />
 	</main>
 </Router>
 

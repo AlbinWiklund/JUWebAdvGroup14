@@ -1,17 +1,23 @@
 <script>
-  import Card from "../lib/accountCard.svelte"
 	import { onMount } from "svelte";
-
-	let allAccounts;
-	let account;
-
+	
 	export let accountId;
 
+	let account;
+
 	async function getData(){
-		const response = await fetch('../../dummyDataAccounts.json');
-		const data = await response.json();
+		const accResponse = await fetch('../../dummyDataAccounts.json');
+		const accData = await accResponse.json();
+
+		const proResponse = await fetch('../../dummyDataProduct.json');
+		const proData = await proResponse.json();
+
+		const revResponse = await fetch('../../dummyDataReviews.json');
+		const revData = await revResponse.json();
 		
-		getAccountFromData(data);
+		getAccountFromData(accData);
+		getProductsFromAll(proData);
+		getReviewsFromAll(revData);
 	}
 
 	async function getAccountFromData(accounts){
@@ -19,8 +25,15 @@
 				if (element.id == accountId) {
 					account = element;
 				}
-					
 			}
+	}
+
+	async function getProductsFromAll(allProducts){
+
+	}
+
+	async function getReviewsFromAll(allReviews){
+
 	}
 
 	onMount(getData);
