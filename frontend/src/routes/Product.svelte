@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from "svelte";
+	import { Link } from "svelte-routing";
 
 	export let productId;
 
@@ -46,9 +47,11 @@
 			{book.description}
 		</div>
 		<div id="buy">
-			<button>
-				Buy Book
-			</button>
+			<Link to="book/{productId}/review">
+				<button>
+					Buy Book
+				</button>
+			</Link>
 		</div>
 	</div>
 {/if}
