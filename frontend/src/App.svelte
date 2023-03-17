@@ -75,8 +75,11 @@
 	}
 
 	#title{
+		display: flex;
 		grid-area: top;
 		position: fixed;
+		width: 100%;
+		justify-content: center;
 	}
 
 	#menu{

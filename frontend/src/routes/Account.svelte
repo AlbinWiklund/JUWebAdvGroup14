@@ -1,9 +1,12 @@
 <script>
+	import { Link } from "svelte-routing";
 	import { onMount } from "svelte";
 	
 	export let accountId;
 
 	let account;
+	let books = [];
+	let reviews = [];
 
 	async function getData(){
 		const accResponse = await fetch('../../dummyDataAccounts.json');
@@ -21,19 +24,27 @@
 	}
 
 	async function getAccountFromData(accounts){
-			for (const element of accounts){
-				if (element.id == accountId) {
-					account = element;
-				}
+		for (const element of accounts){
+			if (element.id == accountId) {
+				account = element;
 			}
+		}
 	}
 
 	async function getProductsFromAll(allProducts){
-
+		for (const element of allProducts){
+			if (element.accountId == accountId) {
+				books.push(element);
+			}
+		}
 	}
 
 	async function getReviewsFromAll(allReviews){
-
+		for (const element of allReviews){
+			if (element.bookSellerId == accountId) {
+				reviews.push(element);
+			}
+		}
 	}
 
 	onMount(getData);
@@ -43,6 +54,8 @@
 	<div id="grid">
 		<div id="about">
 			<div id="profilePic">{account.id}</div>
+			<div id="name">{account.username}</div>
+			<div id="rating">Rating: {account.rating}</div>
 			<div id="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam nobis aspernatur iste! Magni eius consequatur fugit voluptates hic natus placeat ducimus repudiandae qui repellat tempora praesentium, nisi sunt! Aliquam, perspiciatis!</div>
 		</div>
 		<div id="other">
@@ -50,11 +63,29 @@
 				<h2>
 					Product Listing
 				</h2>
+				{#if books}
+					{#each books as book}
+					<Link to="book/{book.id}">
+						<div class="listingItem">
+							{book.title}
+						</div>
+					</Link>
+					{/each}
+				{/if}
 			</div>
 			<div id="review">
 				<h2>
 					Reviews
 				</h2>
+				{#if reviews}
+					{#each reviews as review}
+						<Link to="book/{review.productId}">
+							<div class="reviewItem">
+								{review.description}
+							</div>
+						</Link>
+					{/each}
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -75,11 +106,12 @@
 	#about{
 		grid-area: about;
 		display: grid;
-		grid-template-columns: 1fr;
-		grid-template-rows: 2fr 1fr;
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: auto 30px auto;
 		grid-template-areas: 
-		"profilePic"
-		"description";
+		"profilePic profilePic"
+		"name rating"
+		"description description";
 		height: 400px;
 	}
 
@@ -90,10 +122,26 @@
 		grid-template-rows: 1fr;
 		grid-template-areas: 
 		"listing review";
+		max-height: 600px;
 	}
 
 	#profilePic{
 		grid-area: profilePic;
+	}
+
+	#name{
+		grid-area: name;
+		display: grid;
+		justify-content: center;
+		border-top: 2px solid black;
+		border-right: 2px solid black;
+	}
+
+	#rating{
+		grid-area: rating;
+		display: grid;
+		justify-content: center;
+		border-top: 2px solid black;
 	}
 
 	#description{
@@ -110,8 +158,10 @@
 		border-right: 2px solid black;
 		padding: 8px;
 		display: flex;
-		flex-direction: row;
-		justify-content: center;
+		flex-direction: column;
+		justify-content: start;
+		align-items: center;
+		overflow: auto;
 	}
 
 	#review{
@@ -119,7 +169,27 @@
 		border-top: 2px solid black;
 		padding: 8px;
 		display: flex;
-		flex-direction: row;
-		justify-content: center;
+		flex-direction: column;
+		justify-content: start;
+		align-items: center;
+		overflow: auto;
+	}
+
+	.reviewItem{
+		display: flex;
+		flex-direction: column;
+		border: 2px solid black;
+		padding: 5px;
+		margin: 10px;
+		width: fit-content;
+		background-color: beige;
+	}
+
+	.listingItem{
+		border: 2px solid black;
+		padding: 5px;
+		margin: 10px;
+		width: fit-content;
+		background-color: beige;
 	}
 </style>

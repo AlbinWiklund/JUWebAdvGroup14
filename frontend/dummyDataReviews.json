@@ -2,18 +2,21 @@
 	{
 		"id": 1,
 		"productId": 1,
+		"bookSellerId": 1,
 		"rating": 2.3,
 		"description": "this is an example v1"
 	},
 	{
 		"id": 2,
 		"productId": 1,
+		"bookSellerId": 1,
 		"rating": 2.3,
-		"description": "this is an example v3"
+		"description": "this is an example v2"
 	},
 	{
 		"id": 3,
 		"productId": 1,
+		"bookSellerId": 1,
 		"rating": 2.3,
 		"description": "this is an example v3"
 	}
