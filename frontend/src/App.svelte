@@ -16,7 +16,7 @@
 
 </script>
 <Router {url} >
-	<h1 id="title"><em>Kunskapsmagasinet</em></h1>
+	<header id="title"><em>Kunskapsmagasinet</em></header>
 
 	<nav id="menu">
 		<ul id="sidebar">
