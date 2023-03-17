@@ -21,27 +21,27 @@
 	<nav id="menu">
 		<ul id="sidebar">
 			<li><Link to="/">Home</Link></li>
-			<li><Link to="accounts">Accounts</Link></li>
-			<li><Link to="sell">Sell</Link></li>
-			<li><Link to="profile">Profile</Link></li>
-			<li><Link to="about">About</Link></li>
-			<li><button id="sign-in"><Link to="signin">Sign In</Link></button></li>
-			<li><button id="sign-up"><Link to="signup">Sign Up</Link></button></li>
+			<li><Link to="/accounts">Accounts</Link></li>
+			<li><Link to="/sell">Sell</Link></li>
+			<li><Link to="/profile">Profile</Link></li>
+			<li><Link to="/about">About</Link></li>
+			<li><button id="sign-in"><Link to="/signin">Sign In</Link></button></li>
+			<li><button id="sign-up"><Link to="/signup">Sign Up</Link></button></li>
 		</ul>
 	</nav>
 
 	<main id="main">
 		<Route path="/"><Home /></Route>
-		<Route path="about" component={About} />
-		<Route path="accounts" component={Accounts} />
-		<Route path="profile" component={Profile} />
-		<Route path="sell" component={Sell} />
-		<Route path="signup" component={SignUp} />
-		<Route path="signin" component={SignIn} />
-		<Route path="product" component={Product} />
-		<Route path="account/:accountId" component={Account} />
-		<Route path="book/:productId" component={Product} />
-		<Route path="book/:productId/review" component={Review} />
+		<Route path="/about" component={About} />
+		<Route path="/accounts" component={Accounts} />
+		<Route path="/profile" component={Profile} />
+		<Route path="/sell" component={Sell} />
+		<Route path="/signup" component={SignUp} />
+		<Route path="/signin" component={SignIn} />
+		<Route path="/product" component={Product} />
+		<Route path="/account/:accountId" component={Account} />
+		<Route path="/book/:productId" component={Product} />
+		<Route path="/book/:productId/review" component={Review} />
 	</main>
 </Router>
 

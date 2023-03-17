@@ -7,7 +7,7 @@
   
 </script>
 
-<Link to="account/{accountId}">
+<Link to="/account/{accountId}">
   <div class="card">
     <div id="username" class="textInBoxes"> {username} </div>
     <div id="rating" class="textInBoxes"> {rating}/5 </div>

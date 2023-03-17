@@ -47,7 +47,7 @@
 			{book.description}
 		</div>
 		<div id="buy">
-			<Link to="book/{productId}/review">
+			<Link to="/book/{productId}/review">
 				<button>
 					Buy Book
 				</button>

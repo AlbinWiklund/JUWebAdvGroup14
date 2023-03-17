@@ -56,7 +56,6 @@
 			<div id="profilePic">{account.id}</div>
 			<div id="name">{account.username}</div>
 			<div id="rating">Rating: {account.rating}</div>
-			<div id="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam nobis aspernatur iste! Magni eius consequatur fugit voluptates hic natus placeat ducimus repudiandae qui repellat tempora praesentium, nisi sunt! Aliquam, perspiciatis!</div>
 		</div>
 		<div id="other">
 			<div id="listing">
@@ -65,7 +64,7 @@
 				</h2>
 				{#if books}
 					{#each books as book}
-					<Link to="book/{book.id}">
+					<Link to="/book/{book.id}">
 						<div class="listingItem">
 							{book.title}
 						</div>
@@ -79,7 +78,7 @@
 				</h2>
 				{#if reviews}
 					{#each reviews as review}
-						<Link to="book/{review.productId}">
+						<Link to="/book/{review.productId}">
 							<div class="reviewItem">
 								{review.description}
 							</div>
@@ -107,11 +106,10 @@
 		grid-area: about;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		grid-template-rows: auto 30px auto;
+		grid-template-rows: auto 30px;
 		grid-template-areas: 
 		"profilePic profilePic"
-		"name rating"
-		"description description";
+		"name rating";
 		height: 400px;
 	}
 

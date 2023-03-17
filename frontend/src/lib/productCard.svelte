@@ -11,8 +11,8 @@
 <div class="card">
   <div id="cardPicture"></div>	
   <div id="bookTitle" class="textInBoxes"> {bookName}</div>
-  <div id="productLink" class="textInBoxes"> <Link to="accounts"> Profile </Link></div>
-  <div id="profileLink" class="textInBoxes"> <Link to="book/{productId}"> Book </Link> </div>
+  <div id="productLink" class="textInBoxes"> <Link to="/account/{accountId}"> Profile </Link></div>
+  <div id="profileLink" class="textInBoxes"> <Link to="/book/{productId}"> Book </Link> </div>
 </div>
 
 
