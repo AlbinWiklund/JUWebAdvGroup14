@@ -142,14 +142,6 @@
 		border-top: 2px solid black;
 	}
 
-	#description{
-		grid-area: description;
-		border-top: 2px solid black;
-		background-color: beige;
-		color: black;
-		padding: 8px;
-	}
-
 	#listing{
 		grid-area: listing;
 		border-top: 2px solid black;
