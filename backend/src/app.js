@@ -72,13 +72,45 @@ app.get('/allbooks/:id', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
-        const query = 'SELECT * FROM book WHERE id = ?'
+        const query = 'SELECT * FROM books WHERE id = ?'
 
         const value = [request.params.id]
 
         const selectedBook = await connection.query(query, value)
 
         response.status(200).json(selectedBook)
+    } catch (error) {
+        console.log(error)
+        response.status(500).end("Internal server error.")
+    } finally {
+        connection.release()
+    }
+})
+
+app.get('/allbooks/:id/review', async function(request, response){
+    const connection = await pool.getConnection()
+
+    try {
+
+    } catch (error) {
+        console.log(error)
+        response.status(500).end("Internal server error.")
+    } finally {
+        connection.release()
+    }
+})
+
+app.post('/allbooks/:id/review', async function(request, response){
+    const connection = await pool.getConnection()
+
+    try {
+        const query = 'INSERT INTO reviews(review, rating, accountID) VALUES (?, ?, ?)'
+
+        const values = [request.body.review, request.body.rating, request.params.id]
+
+        const review = await connection.query(query, values)
+
+        response.status(200).json(review)
     } catch (error) {
         console.log(error)
         response.status(500).end("Internal server error.")
