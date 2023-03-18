@@ -15,25 +15,23 @@
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
+  color: black;
   text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
 
-h1 {
+header {
   font-size: 3.2em;
   line-height: 1.1;
+  padding: 10px;
+  margin: 10px;
+  background-color: rgb(200, 120, 0);
 }
 
 .card {
@@ -41,10 +39,12 @@ h1 {
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  grid-template-rows: 105px 1fr;
+  grid-template-areas: 
+  "top top"
+  "nav main";
 }
 
 button {
@@ -59,22 +59,9 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: white;
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
