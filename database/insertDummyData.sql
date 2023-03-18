@@ -1,0 +1,5 @@
+INSERT INTO accounts(username, password, name, surname) VALUES ('kevve', 'asdasd', 'Kevin', 'Karlsson')
+INSERT INTO accounts(username, password, name, surname) VALUES ('smoovi', 'asdasd', 'Albin', 'Wiklund')
+INSERT INTO books(name, price, description, tag, accountID) VALUES ('Matte', 150, 'bla bla', 1, 1)
+INSERT INTO books(name, price, description, tag, accountID) VALUES ('Biologi', 350, 'bla bla', 1, 2)
+INSERT INTO books(name, price, description, tag, accountID) VALUES ('Svenska', 650, 'bla bla', 1, 1)

@@ -1,4 +1,19 @@
 {
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5555,
+            "driver": "MariaDB",
+            "name": "test",
+            "database": "database",
+            "username": "abc",
+            "password": "abc123"
+        }
+    ]
 	"editor.detectIndentation": false,
 	"editor.tabSize": 2,
 	"editor.insertSpaces": false
