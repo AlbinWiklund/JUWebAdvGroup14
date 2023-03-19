@@ -14,9 +14,7 @@
 			surname,
 			password,
 		}
-
 		try {
-
 			const response = await fetch("http://localhost:8080/signup", {
 				method: "POST",
 				headers: {
@@ -34,9 +32,7 @@
 					errorCodes = await response.json()
 				break
 			}
-
 		} catch (error) {
-			
 			errorCodes.push("COMMUNICATION_ERROR")
 			errorCodes = errorCodes
 		}

@@ -18,7 +18,7 @@
 		{/await}
 
 	{:catch error}
-		<p>Something whent wrong, try again later.</p>
+		<p>Something went wrong, try again later.</p>
 	{/await}
 </div>
 
