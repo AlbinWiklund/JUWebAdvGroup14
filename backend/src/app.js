@@ -97,27 +97,41 @@ app.get('/allbooks/:id', async function(request, response){
     }
 })
 
-app.get('/allbooks/:id/review', async function(request, response){
+/*app.get('/allbooks/:id/review', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
-			
+
     } catch (error) {
         console.log(error)
         response.status(500).end("Internal server error.")
     } finally {
         connection.release()
     }
-})
+})*/
 
 app.post('/allbooks/:id/review', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
+				const queryGetBookID = 'SELECT * FROM books WHERE id = ?'
+
+				const bookValue = [request.params.id]
+
+				const book = await connection.query(queryGetBookID, bookValue)
+
+				const stringBookObject = JSON.stringify(book)
+
+				const parsedBookObject = JSON.parse(stringBookObject)
+
         const query = 'INSERT INTO reviews(review, rating, accountID) VALUES (?, ?, ?)'
 
-        const values = [request.body.review, request.body.rating, request.params.id]
+				console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + request.body.review)
+				console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB " + request.body.rating)
+				console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC " + parsedBookObject[0].accountID)
 
+        const values = [request.body.review, request.body.rating, parsedBookObject[0].accountID]
+				
         const review = await connection.query(query, values)
 
         response.status(200).json(review)
