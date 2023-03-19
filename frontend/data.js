@@ -10,7 +10,7 @@ export const accounts = [
 		"email": 'albin.wiklund11@gmail.com'},
 	{
 		id: 2, 
-		"name": "Bob"
+		"name": "Bob",
 		"password": '123',
 		"fName": 'albin',
 		"lName": 'wiklund',
@@ -20,7 +20,7 @@ export const accounts = [
 	},
 	{
 		id: 3, 
-		"name": "Claire"
+		"name": "Claire",
 		"password": '123',
 		"fName": 'albin',
 		"lName": 'wiklund',
