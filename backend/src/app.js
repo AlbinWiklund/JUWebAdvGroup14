@@ -52,6 +52,8 @@ app.get('/allusers/:id', async function(request, response){
         const value = [request.params.id]
 				
         const selectedAccount = await connection.query(query, value)
+				console.log("------------------------- " + selectedAccount)
+				console.log("------------------------- " + selectedAccount.length)
 				if (selectedAccount.length < 1) {
 					const accountOnlyQuery = 'SELECT accounts.id AS id, accounts.username AS username FROM accounts WHERE accounts.id = ?'
 					const selectedOnlyAccount = await connection.query(accountOnlyQuery, value)

@@ -26,7 +26,6 @@
 						<h2>
 							Product Listing
 						</h2>
-						{#if account.bookID}
 							{#each account as book (account.bookID)}
 								<Link to="/book/{book.bookID}">
 									<div class="listingItem">
@@ -34,13 +33,11 @@
 									</div>
 								</Link>
 							{/each}
-						{/if}
 					</div>
 					<div id="review">
 						<h2>
 							Reviews
 						</h2>
-						{#if account.reviewID}
 							{#each account as review (account.reviewID)}
 								<Link to="/book/{review.bookId}">
 									<div class="reviewItem">
@@ -48,7 +45,6 @@
 									</div>
 								</Link>
 							{/each}
-						{/if}
 					</div>
 				</div>
 			</div>
