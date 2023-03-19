@@ -1,5 +1,6 @@
 <script>
 	import { Link } from "svelte-routing";
+	import { user } from "../user-store.js"
 
 	let name = ""
 	let price = 0
@@ -23,7 +24,8 @@
 			const response = await fetch("http://localhost:8080/sellbook", {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
+					"Authorization": "Bearer"+$user.accessToken
 				},
 				body: JSON.stringify(sale)
 			})
