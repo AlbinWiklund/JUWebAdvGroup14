@@ -47,13 +47,20 @@ app.get('/allusers/:id', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
-        const query = 'SELECT * FROM accounts WHERE id = ?'
+        const query =  `SELECT accounts.id AS id, accounts.username AS username, books.id AS bookID, books.name AS bookTitle, reviews.id AS reviewID, reviews.review AS reviewDescription FROM accounts JOIN books ON accounts.id = books.accountID JOIN reviews ON accounts.id = reviews.accountID WHERE accounts.id = ?`
         
         const value = [request.params.id]
-
+				
         const selectedAccount = await connection.query(query, value)
-
-        response.status(200).json(selectedAccount)
+				if (selectedAccount.length < 1) {
+					const accountOnlyQuery = 'SELECT accounts.id AS id, accounts.username AS username FROM accounts WHERE accounts.id = ?'
+					const selectedOnlyAccount = await connection.query(accountOnlyQuery, value)
+					console.log("this is the only accounts response: ", selectedAccount)
+					response.status(200).json(selectedOnlyAccount)
+				} else {
+					console.log("this is the accounts response: ", selectedAccount)
+					response.status(200).json(selectedAccount)
+				}
     } catch (error) {
         console.log(error)
         response.status(500).end("Internal server error.")

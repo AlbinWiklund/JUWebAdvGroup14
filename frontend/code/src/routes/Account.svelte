@@ -4,92 +4,61 @@
 	
 	export let accountId;
 
-	let account;
-	let books = [];
-	let reviews = [];
-
-	async function getData(){
-		const accResponse = await fetch('../../dummyDataAccounts.json');
-		const accData = await accResponse.json();
-
-		const proResponse = await fetch('../../dummyDataProduct.json');
-		const proData = await proResponse.json();
-
-		const revResponse = await fetch('../../dummyDataReviews.json');
-		const revData = await revResponse.json();
-		
-		getAccountFromData(accData);
-		getProductsFromAll(proData);
-		getReviewsFromAll(revData);
-	}
-
-	async function getAccountFromData(accounts){
-		for (const element of accounts){
-			if (element.id == accountId) {
-				account = element;
-			}
-		}
-	}
-
-	async function getProductsFromAll(allProducts){
-		for (const element of allProducts){
-			if (element.accountId == accountId) {
-				books.push(element);
-			}
-		}
-	}
-
-	async function getReviewsFromAll(allReviews){
-		for (const element of allReviews){
-			if (element.bookSellerId == accountId) {
-				reviews.push(element);
-			}
-		}
-	}
-
-	onMount(getData);
+	const fetchAccountPromise = fetch("http://localhost:8080/allusers/"+accountId)
 </script>
 
-{#if account}
-	<div id="grid">
-		<div id="about">
-			<div id="profilePic">{account.id}</div>
-			<div id="name">{account.username}</div>
-			<div id="rating">Rating: {account.rating}</div>
-		</div>
-		<div id="other">
-			<div id="listing">
-				<h2>
-					Product Listing
-				</h2>
-				{#if books}
-					{#each books as book}
-					<Link to="/book/{book.id}">
-						<div class="listingItem">
-							{book.title}
-						</div>
-					</Link>
-					{/each}
-				{/if}
-			</div>
-			<div id="review">
-				<h2>
-					Reviews
-				</h2>
-				{#if reviews}
-					{#each reviews as review}
-						<Link to="/book/{review.productId}">
-							<div class="reviewItem">
-								{review.description}
-							</div>
-						</Link>
-					{/each}
-				{/if}
-			</div>
-		</div>
-	</div>
-{/if}
 
+{#await fetchAccountPromise}
+	<p>Wait, I am loading...</p>
+{:then response}
+{#await response.json() then account}
+		{#if account}
+			<div id="grid">
+				<div id="about">
+					{#each account as acc (account.id)}
+						<div id="profilePic"> Jo </div>
+						<div id="name">{acc.username}</div>
+						<div id="rating">Rating: 0</div>
+					{/each}
+				</div>
+				<div id="other">
+					<div id="listing">
+						<h2>
+							Product Listing
+						</h2>
+						{#if account.bookID}
+							{#each account as book (account.bookID)}
+								<Link to="/book/{book.bookID}">
+									<div class="listingItem">
+										{book.bookTitle}
+									</div>
+								</Link>
+							{/each}
+						{/if}
+					</div>
+					<div id="review">
+						<h2>
+							Reviews
+						</h2>
+						{#if account.reviewID}
+							{#each account as review (account.reviewID)}
+								<Link to="/book/{review.bookId}">
+									<div class="reviewItem">
+										{review.reviewDescription}
+									</div>
+								</Link>
+							{/each}
+						{/if}
+					</div>
+				</div>
+			</div>
+		{/if}
+		
+	{/await}
+
+{:catch error}
+	<p>Something whent wrong, try again later.</p>
+{/await}
 
 <style>
 	#grid{
