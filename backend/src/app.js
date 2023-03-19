@@ -71,12 +71,12 @@ app.get('/allusers/:id', async function(request, response){
 
 app.get('/allbooks', async function(request, response){
     const connection = await pool.getConnection()
-
+		console.log("all books")
     try {
         const query = 'SELECT * FROM books ORDER BY name'
 
         const books = await connection.query(query)
-
+				console.log("inside all books")
         response.status(200).json(books)
     } catch(error) {
         console.log(error)
@@ -141,9 +141,9 @@ app.post('/sellbook', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
-        const query = 'INSERT INTO books(name, price, description, tag, accountID) VALUES (?, ?, ?, ?, ?)'
+        const query = 'INSERT INTO books(name, price, description, category, accountID) VALUES (?, ?, ?, ?, ?)'
 
-        const values = [request.body.name, request.body.price, request.body.description, request.body.tag, request.body.id]
+        const values = [request.body.name, request.body.price, request.body.description, request.body.category, request.body.accountID]
 
         const sellBook = await connection.query(query, values)
 
@@ -230,13 +230,13 @@ app.post('/signin', async function(request, response){
     } finally {
         connection.release()
     }
-})*/
+})
 
 app.get('/', function(request, response){
     console.log("Hola!")
     response.send('It works!')
 })
 
-console.log("listening on 80808")
+console.log("listening on 80808")*/
 
 app.listen(8080)

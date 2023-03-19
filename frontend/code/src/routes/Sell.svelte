@@ -7,6 +7,7 @@
 	let description = ""
 	let saleCreated = false
 	let accountID = 1
+	let errorCodes = []
 
 	async function createSale(){
 		const sale = {
@@ -16,9 +17,9 @@
 			description,
 			accountID,
 		}
-
+		console.log(name)
 		try {
-
+			console.log(price)
 			const response = await fetch("http://localhost:8080/sellbook", {
 				method: "POST",
 				headers: {
@@ -33,13 +34,14 @@
 				break
 
 				case 400:
-					//error
+					errorCodes = await response.json()
 				break
 			}
 
 
 		} catch (error) {
-			//handle error
+			errorCodes.push("COMMUNICATION_ERROR")
+			errorCodes = errorCodes
 		}
 	}
 
@@ -48,7 +50,7 @@
 {#if saleCreated}
 	<p>Sale created!</p>
 {:else}
-	<form action="" method="post" class="flex">
+	<form on:submit|preventDefault={createSale} class="flex">
 		<div class="settings">
 			<label for="title">Title of the book</label>
 			<input type="text" name="title" bind:value={name}>
@@ -58,9 +60,8 @@
 			<input type="text" name="category" bind:value={category}>
 			<label for="description">Description</label>
 			<textarea name="description" id="" cols="20" rows="10" bind:value={description}></textarea>
-			<Link to="/">
-				<button type="submit" id="submit"> Register book </button>
-			</Link>
+			<input type="text" bind:value={accountID}>
+			<button type="submit" id="submit"> Register book </button>
 		</div>
 	</form>
 {/if}
