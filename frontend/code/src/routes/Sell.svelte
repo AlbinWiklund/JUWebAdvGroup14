@@ -1,22 +1,69 @@
 <script>
-	import { Link } from "svelte-routing"; 
+	import { Link } from "svelte-routing";
+
+	let name = ""
+	let price = 0
+	let category = ""
+	let description = ""
+	let saleCreated = false
+	let accountID = 1
+
+	async function createSale(){
+		const sale = {
+			name,
+			price,
+			category,
+			description,
+			accountID,
+		}
+
+		try {
+
+			const response = await fetch("http://localhost:8080/sellbook", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(sale)
+			})
+
+			switch(response.status){
+				case 201:
+					saleCreated = true
+				break
+
+				case 400:
+					//error
+				break
+			}
+
+
+		} catch (error) {
+			//handle error
+		}
+	}
+
 </script>
 
-<form action="" method="post" class="flex">
-	<div class="settings">
-		<label for="title">Title of the book</label>
-		<input type="text" name="title">
-		<label for="price">Price in SEK</label>
-		<input type="number" name="price">
-		<label for="category">Category</label>
-		<input type="text" name="category">
-		<label for="description">Description</label>
-		<textarea name="description" id="" cols="20" rows="10"></textarea>
-		<Link to="/">
-			<button type="submit" id="submit"> Register book </button>
-		</Link>
-	</div>
-</form>
+{#if saleCreated}
+	<p>Sale created!</p>
+{:else}
+	<form action="" method="post" class="flex">
+		<div class="settings">
+			<label for="title">Title of the book</label>
+			<input type="text" name="title" bind:value={name}>
+			<label for="price">Price in SEK</label>
+			<input type="number" name="price" bind:value={price}>
+			<label for="category">Category</label>
+			<input type="text" name="category" bind:value={category}>
+			<label for="description">Description</label>
+			<textarea name="description" id="" cols="20" rows="10" bind:value={description}></textarea>
+			<Link to="/">
+				<button type="submit" id="submit"> Register book </button>
+			</Link>
+		</div>
+	</form>
+{/if}
 
 <style>
 	.flex{

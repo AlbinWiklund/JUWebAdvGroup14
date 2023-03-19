@@ -1,24 +1,25 @@
 <script>
 	import Card from "../lib/accountCard.svelte"
-	import { onMount } from "svelte";
 
-	let accounts;
+	const fetchAccountsPromise = fetch("http://localhost:8080/allusers")
 
-	async function getData(){
-		const response = await fetch('../../dummyDataAccounts.json');
-		const data = await response.json();
-		accounts = data;
-	}
-
-	onMount(getData);
 </script>
 
 <div class="container">
-	{#if accounts}
-		{#each accounts as account}
-			<Card username={account.username} rating={account.rating} accountId={account.id}/>
-		{/each}
-	{/if}
+	{#await fetchAccountsPromise}
+		<p>Wait, I am loading...</p>
+	{:then response}
+		{#await response.json() then accounts}
+			{#if accounts}
+				{#each accounts as account (account.id)}
+					<Card username={account.username} rating={account.rating} accountId={account.id}/>
+				{/each}
+			{/if}
+		{/await}
+
+	{:catch error}
+		<p>Something whent wrong, try again later.</p>
+	{/await}
 </div>
 
 

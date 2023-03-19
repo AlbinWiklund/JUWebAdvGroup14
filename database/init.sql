@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS books(
     name VARCHAR(50),
     price INT,
     description VARCHAR(150),
-    tag INT,
+    category VARCHAR(50),
     accountID INT,
     FOREIGN KEY (accountID) REFERENCES accounts(id)
 );

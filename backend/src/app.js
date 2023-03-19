@@ -15,6 +15,17 @@ pool.on('error', function(error){
 
 const app = express()
 
+app.use(express.json())
+
+app.use(function(request, response, next){
+	response.set("Access-Control-Allow-Origin", "*")
+	response.set("Access-Control-Allow-Methods", "*")
+	response.set("Access-Control-Allow-Headers", "*")
+	response.set("Access-Control-Expose-Headers", "*")
+
+	next()
+})
+
 app.get('/allusers', async function(request, response){
     const connection = await pool.getConnection()
 
@@ -138,7 +149,7 @@ app.post('/sellbook', async function(request, response){
     }
 })
 
-app.get('/:id', async function(request, response){
+/*app.get('/:id', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
@@ -156,14 +167,14 @@ app.get('/:id', async function(request, response){
         connection.release()
     }
 
-})
+})*/
 
 app.post('/signup', async function(request, response){
     const connection = await pool.getConnection()
-
+		console.log("signup post request")
     try {
         const query = 'INSERT INTO accounts(username, password, name, surname) VALUES (?, ?, ?, ?)'
-
+				
         const values = [request.body.username, request.body.password, request.body.name, request.body.surname]
 
         const signUpAccount = await connection.query(query, values)
@@ -197,14 +208,14 @@ app.post('/signin', async function(request, response){
     }
 })
 
-app.get('/accounts', async function(request, response){
+/*app.get('/accounts', async function(request, response){
     const connection = await pool.getConnection()
-
+		console.log("accounts post request")
     try {
         const query = 'SELECT * FROM accounts ORDER BY name'
 
         const accounts = await connection.query(query)
-
+				console.log(accounts)
         response.status(200).json(accounts)
     } catch(error) {
         console.log(error)
@@ -212,7 +223,7 @@ app.get('/accounts', async function(request, response){
     } finally {
         connection.release()
     }
-})
+})*/
 
 app.get('/', function(request, response){
     console.log("Hola!")
