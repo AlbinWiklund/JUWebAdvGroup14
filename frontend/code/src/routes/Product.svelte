@@ -3,8 +3,12 @@
 	import { Link } from "svelte-routing";
 
 	export let productId;
+	
+	const fetchProductPromise = fetch("http://localhost:8080/allbooks/"+productId)
 
-	let book;
+	
+
+	/*let book;
 
 	async function getData(){
 		const response = await fetch('../../dummyDataProduct.json');
@@ -21,40 +25,55 @@
 		}
 	}
 
-	onMount(getData);
+	onMount(getData);*/
 </script>
-{#if book}
-	<div id="grid">
-		<div id="bookPicture">
-			{book.id}
-		</div>
-		
-		<div class="flex" id="title">
-			<h2>
-				{book.title}
-			</h2>
-		</div>
-		
-		<div class="flex" id="price">
-			{book.price} SEK
-		</div>
-		
-		<div class="flex" id="category">
-			{book.category}
-		</div>
 
-		<div class="flex" id="description">
-			{book.description}
-		</div>
-		<div id="buy">
-			<Link to="/book/{productId}/review">
-				<button>
-					Buy Book
-				</button>
-			</Link>
-		</div>
-	</div>
-{/if}
+
+{#await fetchProductPromise}
+	<p>Wait, I am loading...</p>
+{:then response}
+<div>
+	Tjena
+</div>
+	{#await response.json() then books}
+		{#if books}
+			{#each books as book (book.id)}
+				<div id="grid">
+					<div id="bookPicture">
+						{book.id}
+					</div>
+					
+					<div class="flex" id="title">
+						<h2>
+							{book.name}
+						</h2>
+					</div>
+					
+					<div class="flex" id="price">
+						{book.price} SEK
+					</div>
+					
+					<div class="flex" id="category">
+						{book.category}
+					</div>
+
+					<div class="flex" id="description">
+						{book.description}
+					</div>
+					<div id="buy">
+						<Link to="/book/{productId}/review">
+							<button>
+								Buy Book
+							</button>
+						</Link>
+					</div>
+				</div>
+			{/each}
+		{/if}
+	{/await}
+	{:catch error}
+		<p>Something went wrong, try again later.</p>
+{/await}
 
 <style>
 	#grid{
