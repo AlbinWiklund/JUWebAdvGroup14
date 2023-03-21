@@ -4,19 +4,21 @@
 
 	let username = ""
 	let password = ""
+	let token = ""
 
 	async function signin(){
-		const response = await fetch("http://localhost:8080/signin", {
+		const response = await fetch("http://localhost:8080/tokens", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
-			body: `grant_type=password&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+			body: `grant_type=password&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
 		})
 
 		const body = await response.json()
 
 		const accessToken = body.access_token
+		token = accessToken
 
 		$user = {
 			isLoggedIn: true,
@@ -32,6 +34,9 @@
 	<label for="password">Password: <input type="password" bind:value={password}></label>
 	<button type="submit">Sign in</button>
 </form>
+<div>
+	This is the access token: {token}
+</div> 
 
 <style>
 	#flex{

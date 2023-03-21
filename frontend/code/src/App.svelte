@@ -16,7 +16,10 @@
 
 	export let url = "";
 
-
+	function signOut(){
+		$user.isLoggedIn = false
+		$user.accessToken = ""
+	}
 </script>
 <Router {url} >
 	<header id="title"><em>Kunskapsmagasinet</em></header>
@@ -26,12 +29,14 @@
 			<li><Link to="/">Home</Link></li>
 			<li><Link to="/accounts">Accounts</Link></li>
 			<li><Link to="/sell">Sell</Link></li>
-			<li><Link to="/profile">Profile</Link></li>
 			<li><Link to="/about">About</Link></li>
-			<!-- {#if $user.isLoggedIn = false} -->
+			{#if $user.isLoggedIn == false}
 				<li><button id="sign-in"><Link to="/signin">Sign In</Link></button></li>
 				<li><button id="sign-up"><Link to="/signup">Sign Up</Link></button></li>
-			<!-- {/if} -->
+			{:else if $user.isLoggedIn == true}
+				<li><Link to="/profile">Profile</Link></li>
+				<li><button id="sign-up" on:click={signOut}><Link to="/">Sign out</Link></button></li>
+			{/if}
 		</ul>
 	</nav>
 

@@ -1,6 +1,6 @@
 import express from 'express'
+import jwt from 'jsonwebtoken'
 import { createPool } from 'mariadb'
-import { jwt } from 'jsonwebtoken'
 
 const ACCESS_TOKEN_SECRET = "kjhkyfgdbwygcvdsfsdfs"
 
@@ -149,24 +149,24 @@ app.post('/sellbook', async function(request, response){
 		if(error){
 			response.status(401).end()
 		} else {
-			const connection = await pool.getConnection()
-		
-			try {
-					const query = 'INSERT INTO books(name, price, description, category, accountID) VALUES (?, ?, ?, ?, ?)'
-		
-					const values = [request.body.name, request.body.price, request.body.description, request.body.category, payload.sub]
-		
-					const sellBook = await connection.query(query, values)
-		
-					response.status(200).json(sellBook)
-			} catch (error) {
-					console.log(error)
-					response.status(500).end("Internal server error.")
-			} finally {
-					connection.release()
-			}
 		}
 	})
+	const connection = await pool.getConnection()
+
+	try {
+			const query = 'INSERT INTO books(name, price, description, category, accountID) VALUES (?, ?, ?, ?, ?)'
+
+			const values = [request.body.name, request.body.price, request.body.description, request.body.category, payload.sub]
+
+			const sellBook = await connection.query(query, values)
+
+			response.status(200).json(sellBook)
+	} catch (error) {
+			console.log(error)
+			response.status(500).end("Internal server error.")
+	} finally {
+			connection.release()
+	}
 
 })
 
@@ -200,9 +200,10 @@ app.post('/signup', async function(request, response){
 
         const signUpAccount = await connection.query(query, values)
 
-        response.status(200).json(signUpAccount)
+        response.status(200).end()
+				console.log("------------------------ after status code 200 is sent as response")
     } catch (error) {
-        console.log(error)
+        console.log("-------------------------_", error)
         response.status(500).end("Internal server error")
     } finally {
         connection.release()
@@ -210,33 +211,34 @@ app.post('/signup', async function(request, response){
 
 })
 
-app.post('/signin', async function(request, response){
+app.post('/tokens', async function(request, response){
+	const connection = await pool.getConnection()
+
 	const grantType = request.body.grant_type
 	const username = request.body.username
 	const password = request.body.password
 
-	if(grant_type != "password"){
+	if(grantType != "password"){
 		response.status(400).json({error: "unsupporter_grant_type"})
+		console.log("---------------------------------", grantType, username, password)
 		return
 	} 
-
-  const connection = await pool.getConnection()
-
-  try {
+	
+	try {
 		const query = 'SELECT * FROM accounts WHERE username = ? AND password = ?'
 
 		const values = [request.body.username, request.body.password]
 
 		const signInAccount = await connection.query(query, values)
-
-		if(signInAccount.username == username && signInAccount.password == password){
-
+		console.log(signInAccount)
+		if(signInAccount[0].username == username && signInAccount[0].password == password){
+			
 			const payload = {
-				sub: signInAccount.id
-				isLoggedIn: true
+				sub: signInAccount.id,
+				isLoggedIn: true,
 			}
-
-			jwt.sign(payload, ACCESS_TOKEN_SECRET, function(error, accessToken){
+			
+			jwt.sign(payload, ACCESS_TOKEN_SECRET, async function(error, accessToken){
 				if(error){
 					response.status(500).end()
 				} else {
@@ -246,27 +248,18 @@ app.post('/signin', async function(request, response){
 					})
 				}
 			})
-			response.status(200).json(signInAccount)
 		} else {
+			console.log("Bad sign, not working, no good, me orc, me bad")
 			response.status(400).json({error: "invalid_grant"})
 		}
 	} catch (error) {
 		console.log(error)
-		response.status(500).end("Internal server error.")
+		response.status(500).end()
 	} finally {
 		connection.release()
 	}
-})
 
-app.post('/tokens', function(request, response){
-	const grantType = request.body.grant_type
-	const username = request.body.username
-	const password = request.body.password
-
-	if(grant_type != "password"){
-		response.status(400).json({error: "unsupporter_grant_type"})
-		return
-	} 
+  
 })
 
 /*app.get('/accounts', async function(request, response){
