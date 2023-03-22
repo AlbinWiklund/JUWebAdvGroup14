@@ -3,6 +3,11 @@ import jwt from 'jsonwebtoken'
 import { createPool } from 'mariadb'
 
 const ACCESS_TOKEN_SECRET = "kjhkyfgdbwygcvdsfsdfs"
+const MAX_BOOK_TITLE_LENGTH = 50
+const MIN_BOOK_TITLE_LENGTH = 1
+const MIN_CATEGORY_LENGTH = 2
+const MIN_DESCRIPTION_LENGTH = 10
+const MAX_DESCRIPTION_LENGTH = 150
 
 const pool = createPool({
     host:'database',
@@ -145,28 +150,64 @@ app.post('/sellbook', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 
-	jwt.verify(accessToken, ACCESS_TOKEN_SECRET, function(error, payload){
+	jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async function(error, payload){
 		if(error){
 			response.status(401).end()
 		} else {
+			// const MAX_BOOK_TITLE_LENGTH = 50
+			// const MIN_CATEGORY_LENGTH = 2
+			// const MIN_DESCRIPTION_LENGTH = 10
+			// const MAX_DESCRIPTION_LENGTH = 150
+			const sale = request.body
+			const errorMessages = []
+
+			if(typeof sale?.name != "string"){
+				errorMessages.push("titleIsMissing")
+			} else if(sale.name.length > MAX_BOOK_TITLE_LENGTH){
+				errorMessages.push("titleIsTooLong")
+			} else if(sale.name.length < MIN_BOOK_TITLE_LENGTH){
+				errorMessages.push("titleIsTooShort")
+			}
+
+			if(typeof sale?.price != "number"){
+				errorMessages.push("priceIsMissing")
+			}
+
+			if(typeof sale?.category != "string"){
+				errorMessages.push("categoryIsMissing")
+			}
+
+			if(typeof sale?.description != "string"){
+				errorMessages.push("descriptionIsMissing")
+			} else if(sale.description.length > MAX_DESCRIPTION_LENGTH){
+				errorMessages.push("descriptionIsTooLong")
+			} else if(sale.description.length < MIN_DESCRIPTION_LENGTH){
+				errorMessages.push("descriptionIsTooShort")
+			}
+
+			if(errorMessages.length > 0){
+				response.status(400).json(errorMessages)
+				return
+			}
+
+			const connection = await pool.getConnection()
+		
+			try {
+					const query = 'INSERT INTO books(name, price, description, category, accountID) VALUES (?, ?, ?, ?, ?)'
+		
+					const values = [request.body.name, request.body.price, request.body.description, request.body.category, payload.sub]
+		
+					const sellBook = await connection.query(query, values)
+		
+					response.status(201).end()
+			} catch (error) {
+					console.log(error)
+					response.status(500).end("Internal server error.")
+			} finally {
+					connection.release()
+			}
 		}
 	})
-	const connection = await pool.getConnection()
-
-	try {
-			const query = 'INSERT INTO books(name, price, description, category, accountID) VALUES (?, ?, ?, ?, ?)'
-
-			const values = [request.body.name, request.body.price, request.body.description, request.body.category, payload.sub]
-
-			const sellBook = await connection.query(query, values)
-
-			response.status(200).json(sellBook)
-	} catch (error) {
-			console.log(error)
-			response.status(500).end("Internal server error.")
-	} finally {
-			connection.release()
-	}
 
 })
 
@@ -230,13 +271,14 @@ app.post('/tokens', async function(request, response){
 		const values = [request.body.username, request.body.password]
 
 		const signInAccount = await connection.query(query, values)
-		console.log(signInAccount)
+		
 		if(signInAccount[0].username == username && signInAccount[0].password == password){
 			
 			const payload = {
-				sub: signInAccount.id,
+				sub: signInAccount[0].id,
 				isLoggedIn: true,
 			}
+			console.log("---------------This is the payload: ", payload) //Console log
 			
 			jwt.sign(payload, ACCESS_TOKEN_SECRET, async function(error, accessToken){
 				if(error){
@@ -245,6 +287,7 @@ app.post('/tokens', async function(request, response){
 					response.status(200).json({
 						access_token: accessToken,
 						type: "bearer",
+						accountID: signInAccount[0].id
 					})
 				}
 			})
@@ -253,7 +296,6 @@ app.post('/tokens', async function(request, response){
 			response.status(400).json({error: "invalid_grant"})
 		}
 	} catch (error) {
-		console.log(error)
 		response.status(500).end()
 	} finally {
 		connection.release()

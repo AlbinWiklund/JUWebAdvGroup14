@@ -19,6 +19,7 @@
 	function signOut(){
 		$user.isLoggedIn = false
 		$user.accessToken = ""
+		$user.accountID = 0
 	}
 </script>
 <Router {url} >
@@ -28,12 +29,12 @@
 		<ul id="sidebar">
 			<li><Link to="/">Home</Link></li>
 			<li><Link to="/accounts">Accounts</Link></li>
-			<li><Link to="/sell">Sell</Link></li>
 			<li><Link to="/about">About</Link></li>
 			{#if $user.isLoggedIn == false}
 				<li><button id="sign-in"><Link to="/signin">Sign In</Link></button></li>
 				<li><button id="sign-up"><Link to="/signup">Sign Up</Link></button></li>
 			{:else if $user.isLoggedIn == true}
+				<li><Link to="/sell">Sell</Link></li>
 				<li><Link to="/profile">Profile</Link></li>
 				<li><button id="sign-up" on:click={signOut}><Link to="/">Sign out</Link></button></li>
 			{/if}

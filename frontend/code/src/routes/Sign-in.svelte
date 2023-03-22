@@ -18,11 +18,13 @@
 		const body = await response.json()
 
 		const accessToken = body.access_token
+		const accountID = body.accountID
 		token = accessToken
 
 		$user = {
 			isLoggedIn: true,
 			accessToken,
+			accountID,
 		}
 	}
 </script>

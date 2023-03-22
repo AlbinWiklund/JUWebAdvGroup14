@@ -7,8 +7,8 @@
 	let category = ""
 	let description = ""
 	let saleCreated = false
-	let accountID = 1
-	let errorCodes = []
+	let accountID = $user.accountID
+	let errorMessages = []
 
 	async function createSale(){
 		const sale = {
@@ -36,14 +36,14 @@
 				break
 
 				case 400:
-					errorCodes = await response.json()
+					errorMessages = await response.json()
 				break
 			}
 
 
 		} catch (error) {
-			errorCodes.push("COMMUNICATION_ERROR")
-			errorCodes = errorCodes
+			errorMessages.push("COMMUNICATION_ERROR")
+			errorMessages = errorMessages
 		}
 	}
 
@@ -66,6 +66,14 @@
 			<button type="submit" id="submit"> Register book </button>
 		</div>
 	</form>
+	{#if 0 < errorMessages.length}
+		<p>We have errors!</p>
+		<ul>
+			{#each errorMessages as errorMessage}
+				<li>{errorMessage}</li>
+			{/each}
+		</ul>
+	{/if}
 {/if}
 
 <style>
