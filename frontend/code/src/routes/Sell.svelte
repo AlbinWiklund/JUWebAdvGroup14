@@ -60,7 +60,7 @@
 			<input type="text" name="category" bind:value={category}>
 			<label for="description">Description</label>
 			<textarea name="description" id="" cols="20" rows="10" bind:value={description}></textarea>
-			<input type="text" bind:value={accountID}>
+			<input type="hidden" bind:value={accountID}>
 			<button type="submit" id="submit"> Register book </button>
 		</div>
 	</form>

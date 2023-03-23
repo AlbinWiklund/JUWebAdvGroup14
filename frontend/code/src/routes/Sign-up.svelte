@@ -49,8 +49,8 @@
 		<label for="username">Username: <input type="text" bind:value={username}></label>
 		<label for="fName">First Name: <input type="text" bind:value={name}></label>
 		<label for="lName">Last Name: <input type="text" name="" id="" bind:value={surname}></label>
-		<label for="password">Password: <input type="text" bind:value={password}></label>
-		<label for="repassword">Re-enter password: <input type="text" name="" id=""></label>
+		<label for="password">Password: <input type="password" bind:value={password}></label>
+		<label for="repassword">Re-enter password: <input type="password" name="" id=""></label>
 		<button type="submit">Sign up!</button>
 	</form>
 {/if}
