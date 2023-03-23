@@ -1,6 +1,6 @@
 <script>
 	import { Link } from "svelte-routing";
-	import { onMount } from "svelte";
+	import { user } from "../user-store.js"
 	
 	export let accountId;
 
@@ -18,7 +18,7 @@
 					{#each account as acc (account.id)}
 						<div id="profilePic"> Jo </div>
 						<div id="name">{acc.username}</div>
-						<div id="rating">Rating: 0</div>
+						<div id="rating">Rating: {acc.rating}</div>
 					{/each}
 				</div>
 				<div id="other">
@@ -48,6 +48,9 @@
 					</div>
 				</div>
 			</div>
+			{#if $user.accountID == account[0].id}
+				<button>Delete this account</button>
+			{/if}
 		{/if}
 		
 	{/await}
@@ -131,12 +134,9 @@
 	}
 
 	.reviewItem{
-		display: flex;
-		flex-direction: column;
 		border: 2px solid black;
 		padding: 5px;
 		margin: 10px;
-		width: fit-content;
 		background-color: beige;
 	}
 
@@ -144,7 +144,6 @@
 		border: 2px solid black;
 		padding: 5px;
 		margin: 10px;
-		width: fit-content;
 		background-color: beige;
 	}
 </style>

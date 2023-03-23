@@ -5,36 +5,12 @@
 	export let productId;
 	
 	const fetchProductPromise = fetch("http://localhost:8080/allbooks/"+productId)
-
-	
-
-	/*let book;
-
-	async function getData(){
-		const response = await fetch('../../dummyDataProduct.json');
-		const data = await response.json();
-		
-		getProductFromData(data);
-	}
-
-	async function getProductFromData(proData){
-		for (const element of proData){
-			if (element.id == productId) {
-				book = element;
-			}
-		}
-	}
-
-	onMount(getData);*/
 </script>
 
 
 {#await fetchProductPromise}
 	<p>Wait, I am loading...</p>
 {:then response}
-<div>
-	Tjena
-</div>
 	{#await response.json() then books}
 		{#if books}
 			{#each books as book (book.id)}
