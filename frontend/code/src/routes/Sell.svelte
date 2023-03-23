@@ -59,7 +59,17 @@
 			<label for="price">Price in SEK</label>
 			<input type="number" name="price" bind:value={price}>
 			<label for="category">Category</label>
-			<input type="text" name="category" bind:value={category}>
+			<select name="category" bind:value={category}>
+				<option value="math">Math</option>
+				<option value="biology">Biology</option>
+				<option value="chemistry">Chemistry</option>
+				<option value="physics">Physics</option>
+				<option value="geografics">Geografics</option>
+				<option value="swedish">Swedish</option>
+				<option value="english">English</option>
+				<option value="programming">Programming</option>
+			</select>
+			<!--<input type="text" name="category" bind:value={category}>-->
 			<label for="description">Description</label>
 			<textarea name="description" id="" cols="20" rows="10" bind:value={description}></textarea>
 			<input type="hidden" bind:value={accountID}>

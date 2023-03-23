@@ -314,6 +314,32 @@ app.post('/signin', async function(request, response){
 	}
 })
 
+app.post('/allbooks/bycategory', async function(request, response){
+	const connection = await pool.getConnection()
+	try {
+		let books = []
+
+		if(request.body.category == "all"){
+			const query = 'SELECT * FROM books'
+
+			books = await connection.query(query)
+		} else {
+			const query = 'SELECT * FROM books WHERE category = ?'
+
+			const value = [request.body.category]
+
+		 	books = await connection.query(query, value)
+		}
+
+		response.status(200).json(books)
+	} catch (error) {
+		console.log(error)
+		response.status(500).end("Internal server error.")
+	} finally {
+		connection.release()
+	}
+})
+
 /*app.get('/accounts', async function(request, response){
     const connection = await pool.getConnection()
 		console.log("accounts post request")
