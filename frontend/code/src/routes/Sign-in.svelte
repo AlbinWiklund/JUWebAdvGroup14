@@ -4,10 +4,11 @@
 
 	let username = ""
 	let password = ""
-	let token = ""
+
+	let errorMessages = []
 
 	async function signin(){
-		const response = await fetch("http://localhost:8080/tokens", {
+		const response = await fetch("http://localhost:8080/signin", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
@@ -17,14 +18,22 @@
 
 		const body = await response.json()
 
-		const accessToken = body.access_token
-		const accountID = body.accountID
-		token = accessToken
+		switch(response.status){
+			case 200:
+				const accessToken = body.access_token
+				const accountID = body.accountID
 
-		$user = {
-			isLoggedIn: true,
-			accessToken,
-			accountID,
+				$user = {
+					isLoggedIn: true,
+					accessToken,
+					accountID,
+				}
+				break
+
+			case 400:
+				errorMessages = ["Wrong username or password"]
+				console.log(errorMessages)
+				break
 		}
 	}
 </script>
@@ -36,9 +45,15 @@
 	<label for="password">Password: <input type="password" bind:value={password}></label>
 	<button type="submit">Sign in</button>
 </form>
-<div>
-	This is the access token: {token}
-</div> 
+
+{#if 0 < errorMessages.length}
+	<p>Error messages:</p>
+	<ul>
+		<li>
+			{errorMessages[0]}
+		</li>
+	</ul>
+{/if}
 
 <style>
 	#flex{

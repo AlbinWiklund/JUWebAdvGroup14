@@ -9,6 +9,9 @@ const MIN_CATEGORY_LENGTH = 2
 const MIN_DESCRIPTION_LENGTH = 10
 const MAX_DESCRIPTION_LENGTH = 150
 
+const MAX_NAME_LENGTH = 20
+const MIN_NAME_LENGTH = 1
+
 const pool = createPool({
     host:'database',
     port: 3306,
@@ -154,10 +157,6 @@ app.post('/sellbook', async function(request, response){
 		if(error){
 			response.status(401).end()
 		} else {
-			// const MAX_BOOK_TITLE_LENGTH = 50
-			// const MIN_CATEGORY_LENGTH = 2
-			// const MIN_DESCRIPTION_LENGTH = 10
-			// const MAX_DESCRIPTION_LENGTH = 150
 			const sale = request.body
 			const errorMessages = []
 
@@ -252,18 +251,17 @@ app.post('/signup', async function(request, response){
 
 })
 
-app.post('/tokens', async function(request, response){
-	const connection = await pool.getConnection()
-
+app.post('/signin', async function(request, response){
 	const grantType = request.body.grant_type
 	const username = request.body.username
 	const password = request.body.password
 
 	if(grantType != "password"){
 		response.status(400).json({error: "unsupporter_grant_type"})
-		console.log("---------------------------------", grantType, username, password)
 		return
 	} 
+	
+	const connection = await pool.getConnection()
 	
 	try {
 		const query = 'SELECT * FROM accounts WHERE username = ? AND password = ?'
@@ -292,16 +290,13 @@ app.post('/tokens', async function(request, response){
 				}
 			})
 		} else {
-			console.log("Bad sign, not working, no good, me orc, me bad")
 			response.status(400).json({error: "invalid_grant"})
 		}
 	} catch (error) {
-		response.status(500).end()
+		response.status(400).json({error: "no_account"})
 	} finally {
 		connection.release()
 	}
-
-  
 })
 
 /*app.get('/accounts', async function(request, response){
