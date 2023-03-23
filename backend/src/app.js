@@ -1,5 +1,16 @@
 import express from 'express'
+import jwt from 'jsonwebtoken'
 import { createPool } from 'mariadb'
+
+const ACCESS_TOKEN_SECRET = "kjhkyfgdbwygcvdsfsdfs"
+const MAX_BOOK_TITLE_LENGTH = 50
+const MIN_BOOK_TITLE_LENGTH = 1
+const MIN_CATEGORY_LENGTH = 2
+const MIN_DESCRIPTION_LENGTH = 10
+const MAX_DESCRIPTION_LENGTH = 150
+
+const MAX_NAME_LENGTH = 20
+const MIN_NAME_LENGTH = 1
 
 const pool = createPool({
     host:'database',
@@ -16,6 +27,7 @@ pool.on('error', function(error){
 const app = express()
 
 app.use(express.json())
+app.use(express.urlencoded())
 
 app.use(function(request, response, next){
 	response.set("Access-Control-Allow-Origin", "*")
@@ -153,22 +165,64 @@ app.post('/allbooks/:id/review', async function(request, response){
 })
 
 app.post('/sellbook', async function(request, response){
-    const connection = await pool.getConnection()
+	const authorizationHeaderValue = request.get("Authorization")
+	const accessToken = authorizationHeaderValue.substring(7)
 
-    try {
-        const query = 'INSERT INTO books(name, price, description, category, accountID) VALUES (?, ?, ?, ?, ?)'
+	jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async function(error, payload){
+		if(error){
+			response.status(401).end()
+		} else {
+			const sale = request.body
+			const errorMessages = []
 
-        const values = [request.body.name, request.body.price, request.body.description, request.body.category, request.body.accountID]
+			if(typeof sale?.name != "string"){
+				errorMessages.push("titleIsMissing")
+			} else if(sale.name.length > MAX_BOOK_TITLE_LENGTH){
+				errorMessages.push("titleIsTooLong")
+			} else if(sale.name.length < MIN_BOOK_TITLE_LENGTH){
+				errorMessages.push("titleIsTooShort")
+			}
 
-        const sellBook = await connection.query(query, values)
+			if(typeof sale?.price != "number"){
+				errorMessages.push("priceIsMissing")
+			}
 
-        response.status(200).json(sellBook)
-    } catch (error) {
-        console.log(error)
-        response.status(500).end("Internal server error.")
-    } finally {
-        connection.release()
-    }
+			if(typeof sale?.category != "string"){
+				errorMessages.push("categoryIsMissing")
+			}
+
+			if(typeof sale?.description != "string"){
+				errorMessages.push("descriptionIsMissing")
+			} else if(sale.description.length > MAX_DESCRIPTION_LENGTH){
+				errorMessages.push("descriptionIsTooLong")
+			} else if(sale.description.length < MIN_DESCRIPTION_LENGTH){
+				errorMessages.push("descriptionIsTooShort")
+			}
+
+			if(errorMessages.length > 0){
+				response.status(400).json(errorMessages)
+				return
+			}
+
+			const connection = await pool.getConnection()
+		
+			try {
+					const query = 'INSERT INTO books(name, price, description, category, accountID) VALUES (?, ?, ?, ?, ?)'
+		
+					const values = [request.body.name, request.body.price, request.body.description, request.body.category, payload.sub]
+		
+					const sellBook = await connection.query(query, values)
+		
+					response.status(201).end()
+			} catch (error) {
+					console.log(error)
+					response.status(500).end("Internal server error.")
+			} finally {
+					connection.release()
+			}
+		}
+	})
+
 })
 
 /*app.get('/:id', async function(request, response){
@@ -201,9 +255,10 @@ app.post('/signup', async function(request, response){
 
         const signUpAccount = await connection.query(query, values)
 
-        response.status(200).json(signUpAccount)
+        response.status(200).end()
+				console.log("------------------------ after status code 200 is sent as response")
     } catch (error) {
-        console.log(error)
+        console.log("-------------------------_", error)
         response.status(500).end("Internal server error")
     } finally {
         connection.release()
@@ -212,22 +267,51 @@ app.post('/signup', async function(request, response){
 })
 
 app.post('/signin', async function(request, response){
-    const connection = await pool.getConnection()
+	const grantType = request.body.grant_type
+	const username = request.body.username
+	const password = request.body.password
 
-    try {
-        const query = 'SELECT * FROM accounts WHERE username = ? AND password = ?'
+	if(grantType != "password"){
+		response.status(400).json({error: "unsupporter_grant_type"})
+		return
+	} 
+	
+	const connection = await pool.getConnection()
+	
+	try {
+		const query = 'SELECT * FROM accounts WHERE username = ? AND password = ?'
 
-        const values = [request.body.username, request.body.password]
+		const values = [request.body.username, request.body.password]
 
-        const signInAccount = await connection.query(query, values)
-
-        response.status(200).json(signInAccount,)
-    } catch (error) {
-        console.log(error)
-        response.status(500).end("Internal server error.")
-    } finally {
-        connection.release()
-    }
+		const signInAccount = await connection.query(query, values)
+		
+		if(signInAccount[0].username == username && signInAccount[0].password == password){
+			
+			const payload = {
+				sub: signInAccount[0].id,
+				isLoggedIn: true,
+			}
+			console.log("---------------This is the payload: ", payload) //Console log
+			
+			jwt.sign(payload, ACCESS_TOKEN_SECRET, async function(error, accessToken){
+				if(error){
+					response.status(500).end()
+				} else {
+					response.status(200).json({
+						access_token: accessToken,
+						type: "bearer",
+						accountID: signInAccount[0].id
+					})
+				}
+			})
+		} else {
+			response.status(400).json({error: "invalid_grant"})
+		}
+	} catch (error) {
+		response.status(400).json({error: "no_account"})
+	} finally {
+		connection.release()
+	}
 })
 
 /*app.get('/accounts', async function(request, response){
