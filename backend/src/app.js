@@ -11,6 +11,8 @@ const MAX_DESCRIPTION_LENGTH = 150
 
 const MAX_NAME_LENGTH = 20
 const MIN_NAME_LENGTH = 1
+const MIN_PASSWORD_LENGTH = 3
+const MAX_PASSWORD_LENGTH = 28
 
 const pool = createPool({
     host:'database',
@@ -172,30 +174,30 @@ app.post('/sellbook', async function(request, response){
 		if(error){
 			response.status(401).end()
 		} else {
-			const sale = request.body
+			const book = request.body
 			const errorMessages = []
 
-			if(typeof sale?.name != "string"){
+			if(typeof book?.name != "string"){
 				errorMessages.push("titleIsMissing")
-			} else if(sale.name.length > MAX_BOOK_TITLE_LENGTH){
+			} else if(book.name.length > MAX_BOOK_TITLE_LENGTH){
 				errorMessages.push("titleIsTooLong")
-			} else if(sale.name.length < MIN_BOOK_TITLE_LENGTH){
+			} else if(book.name.length < MIN_BOOK_TITLE_LENGTH){
 				errorMessages.push("titleIsTooShort")
 			}
 
-			if(typeof sale?.price != "number"){
+			if(typeof book?.price != "number"){
 				errorMessages.push("priceIsMissing")
 			}
 
-			if(typeof sale?.category != "string"){
+			if(typeof book?.category != "string"){
 				errorMessages.push("categoryIsMissing")
 			}
 
-			if(typeof sale?.description != "string"){
+			if(typeof book?.description != "string"){
 				errorMessages.push("descriptionIsMissing")
-			} else if(sale.description.length > MAX_DESCRIPTION_LENGTH){
+			} else if(book.description.length > MAX_DESCRIPTION_LENGTH){
 				errorMessages.push("descriptionIsTooLong")
-			} else if(sale.description.length < MIN_DESCRIPTION_LENGTH){
+			} else if(book.description.length < MIN_DESCRIPTION_LENGTH){
 				errorMessages.push("descriptionIsTooShort")
 			}
 
@@ -246,23 +248,74 @@ app.post('/sellbook', async function(request, response){
 })*/
 
 app.post('/signup', async function(request, response){
-    const connection = await pool.getConnection()
-		console.log("signup post request")
-    try {
-        const query = 'INSERT INTO accounts(username, password, name, surname) VALUES (?, ?, ?, ?)'
-				
-        const values = [request.body.username, request.body.password, request.body.name, request.body.surname]
+	const account = request.body
+	const errorMessages = []
 
-        const signUpAccount = await connection.query(query, values)
+	if(typeof account?.username != "string"){
+		errorMessages.push("usernameIsMissing")
+	}	else if(account.username.length > MAX_NAME_LENGTH){
+		errorMessages.push("usernameTooLong")
+	} else if(account.username.length < MIN_NAME_LENGTH){
+		errorMessages.push("usernameTooShort")
+	}
 
-        response.status(200).end()
-				console.log("------------------------ after status code 200 is sent as response")
-    } catch (error) {
-        console.log("-------------------------_", error)
-        response.status(500).end("Internal server error")
-    } finally {
-        connection.release()
-    }
+	if(typeof account?.name != "string"){
+		errorMessages.push("nameIsMissing")
+	}	else if(account.name.length > MAX_NAME_LENGTH){
+		errorMessages.push("nameTooLong")
+	} else if(account.name.length < MIN_NAME_LENGTH){
+		errorMessages.push("nameTooShort")
+	}
+
+	if(typeof account?.surname != "string"){
+		errorMessages.push("surnameIsMissing")
+	}	else if(account.surname.length > MAX_NAME_LENGTH){
+		errorMessages.push("surnameTooLong")
+	} else if(account.surname.length < MIN_NAME_LENGTH){
+		errorMessages.push("surnameTooShort")
+	}
+
+	if(typeof account?.password != "string"){
+		errorMessages.push("password missing")
+	} else if(account.password.length > MAX_PASSWORD_LENGTH){
+		errorMessages.push("passwordTooLong")
+	} else if(account.password.length < MIN_PASSWORD_LENGTH){
+		errorMessages.push("passwordTooShort")
+	}
+
+	if(errorMessages.length > 0){
+		response.status(400).json(errorMessages)
+		return
+	}
+
+	const connection = await pool.getConnection()
+
+	
+	const usernameQuery = 'SELECT accounts.username AS username from accounts WHERE username = ?'
+
+	const usernameValues = [account.username]
+
+	const accountUsername = await connection.query(usernameQuery, usernameValues)
+
+	if(accountUsername[0] != undefined){
+		response.status(400).json(["usernameAlreadyExists"])
+		return
+	}
+	try {
+			const query = 'INSERT INTO accounts(username, password, name, surname) VALUES (?, ?, ?, ?)'
+			
+			const values = [account.username, account.password, account.name, account.surname]
+
+			const signUpAccount = await connection.query(query, values)
+
+			response.status(201).end()
+			console.log("------------------------ after status code 201 is sent as response")
+	} catch (error) {
+			console.log("-------------------------_", error)
+			response.status(500).end("Internal server error")
+	} finally {
+			connection.release()
+	}
 
 })
 
@@ -281,7 +334,7 @@ app.post('/signin', async function(request, response){
 	try {
 		const query = 'SELECT * FROM accounts WHERE username = ? AND password = ?'
 
-		const values = [request.body.username, request.body.password]
+		const values = [username, password]
 
 		const signInAccount = await connection.query(query, values)
 		

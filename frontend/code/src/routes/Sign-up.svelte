@@ -5,7 +5,7 @@
 	let surname = ""
 	let password = ""
 	let accountWasCreated = false
-	let errorCodes = []
+	let errorMessages = []
 
 	async function createAccount(){
 		const account = {
@@ -29,12 +29,12 @@
 				break
 
 				case 400:
-					errorCodes = await response.json()
+					errorMessages = await response.json()
 				break
 			}
 		} catch (error) {
-			errorCodes.push("COMMUNICATION_ERROR")
-			errorCodes = errorCodes
+			errorMessages.push("COMMUNICATION_ERROR")
+			errorMessages = errorMessages
 		}
 
 	}
@@ -50,9 +50,17 @@
 		<label for="fName">First Name: <input type="text" bind:value={name}></label>
 		<label for="lName">Last Name: <input type="text" name="" id="" bind:value={surname}></label>
 		<label for="password">Password: <input type="password" bind:value={password}></label>
-		<label for="repassword">Re-enter password: <input type="password" name="" id=""></label>
+		<label for="repassword">Re-enter password: <input type="password"></label>
 		<button type="submit">Sign up!</button>
 	</form>
+	{#if 0 < errorMessages.length}
+		<p>We have errors!</p>
+		<ul>
+			{#each errorMessages as errorMessage}
+				<li>{errorMessage}</li>
+			{/each}
+		</ul>
+	{/if}
 {/if}
 
 
