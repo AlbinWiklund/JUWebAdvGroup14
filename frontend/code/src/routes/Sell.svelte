@@ -33,11 +33,11 @@
 			switch(response.status){
 				case 201:
 					saleCreated = true
-					break
+				break;
 
 				case 400:
 					errorMessages = await response.json()
-					break
+				break;
 			}
 
 

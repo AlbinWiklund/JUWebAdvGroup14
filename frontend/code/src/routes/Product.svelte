@@ -6,7 +6,71 @@
 	
 	const fetchProductPromise = fetch("http://localhost:8080/allbooks/"+productId)
 
-	
+	let productDeleted = false
+	let name = ""
+	let price = 0
+	let category = ""
+	let description = ""
+
+	let deleteProductBool = false
+	let updateProductBool = false
+
+	async function deleteProduct(){
+
+		const productToDelete={
+			productId,
+		}
+
+		try {
+			const response = await fetch("http://localhost:8080/allbooks/"+productId+"/delete", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(productToDelete)
+			})
+
+			switch(response.status){
+				case 201:
+					productDeleted = true
+				break;
+
+				case 400:
+
+				break;
+			}
+		} catch (error) {
+			
+		}
+	}
+
+	async function updateProduct(){
+		 const productToUpdate={
+			productId,
+			name,
+			price,
+			category,
+			description,
+		 }
+
+		const response = await fetch("http://localhost:8080/allbooks/"+productId+"/update", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(productToUpdate)
+		})
+/*
+		switch(response.status){
+			case 201:
+
+			break;
+
+			case 400:
+
+			break;
+		}*/
+	}
 
 	/*let book;
 
@@ -66,6 +130,18 @@
 								Buy Book
 							</button>
 						</Link>
+						<button on:click|preventDefault={updateProduct}>
+							Update Book
+						</button>
+						{#if updateProductBool}
+							<p></p>
+						{/if}
+						<button on:click|preventDefault={deleteProduct}>
+							Delete Book
+						</button>
+						{#if deleteProductBool}
+							<p></p>
+						{/if}
 					</div>
 				</div>
 			{/each}
