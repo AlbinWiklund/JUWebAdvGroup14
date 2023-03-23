@@ -5,14 +5,14 @@ import { createPool } from 'mariadb'
 const ACCESS_TOKEN_SECRET = "kjhkyfgdbwygcvdsfsdfs"
 const MAX_BOOK_TITLE_LENGTH = 50
 const MIN_BOOK_TITLE_LENGTH = 1
-const MIN_CATEGORY_LENGTH = 2
 const MIN_DESCRIPTION_LENGTH = 10
 const MAX_DESCRIPTION_LENGTH = 150
-
 const MAX_NAME_LENGTH = 20
 const MIN_NAME_LENGTH = 1
 const MIN_PASSWORD_LENGTH = 3
 const MAX_PASSWORD_LENGTH = 28
+const MAX_REVIEW_LENGTH = 150
+const MIN_REVIEW_LENGTH = 1
 
 const pool = createPool({
     host:'database',
@@ -134,30 +134,53 @@ app.get('/allbooks/:id', async function(request, response){
 })*/
 
 app.post('/allbooks/:id/review', async function(request, response){
-    const connection = await pool.getConnection()
 
-    try {
-				const queryGetBookID = 'SELECT * FROM books WHERE id = ?'
+	const review = request.body
 
-				const bookValue = [request.params.id]
+	const errorMessages = []
 
-				const book = await connection.query(queryGetBookID, bookValue)
+	if(typeof review?.review != "string"){
+		errorMessages.push("missingReview")
+	} else if(review.review.length > MAX_REVIEW_LENGTH){
+		errorMessages.push("reviewTooLong")
+	} else if(review.review.length < MIN_REVIEW_LENGTH){
+		errorMessages.push("reviewTooShort")
+	}
 
-				const stringBookObject = JSON.stringify(book)
+	if(typeof review?.rating != "string"){
+		console.log(review.rating)
+		errorMessages.push("missingRating")
+	}
 
-				const parsedBookObject = JSON.parse(stringBookObject)
+	if(errorMessages.length > 0){
+		response.status(400).json(errorMessages)
+		return
+	}
 
-        const query = 'INSERT INTO reviews(review, rating, accountID) VALUES (?, ?, ?)'
+	const connection = await pool.getConnection()
 
-				console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + request.body.review)
-				console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB " + request.body.rating)
-				console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC " + parsedBookObject[0].accountID)
+	try {
+			const queryGetBookID = 'SELECT * FROM books WHERE id = ?'
 
-        const values = [request.body.review, request.body.rating, parsedBookObject[0].accountID]
-				
-        const review = await connection.query(query, values)
+			const bookValue = [request.params.id]
 
-        response.status(200).json(review)
+			const book = await connection.query(queryGetBookID, bookValue)
+
+			const stringBookObject = JSON.stringify(book)
+
+			const parsedBookObject = JSON.parse(stringBookObject)
+
+			const query = 'INSERT INTO reviews(review, rating, accountID) VALUES (?, ?, ?)'
+
+			console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + request.body.review)
+			console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB " + request.body.rating)
+			console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC " + parsedBookObject[0].accountID)
+
+			const values = [request.body.review, request.body.rating, parsedBookObject[0].accountID]
+			
+			const review = await connection.query(query, values)
+
+			response.status(201).end()
     } catch (error) {
         console.log(error)
         response.status(500).end("Internal server error.")
