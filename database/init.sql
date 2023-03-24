@@ -11,9 +11,9 @@ CREATE TABLE IF NOT EXISTS books(
     name VARCHAR(50),
     price INT,
     description VARCHAR(150),
-    category VARCHAR(50),
+		category VARCHAR(50),
     accountID INT,
-    FOREIGN KEY (accountID) REFERENCES accounts(id)
+		FOREIGN KEY (accountID) REFERENCES accounts(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS reviews(
@@ -21,6 +21,6 @@ CREATE TABLE IF NOT EXISTS reviews(
     review VARCHAR(50),
     rating INT,
     accountID INT,
-    FOREIGN KEY (accountID) REFERENCES accounts(id)
+    FOREIGN KEY (accountID) REFERENCES accounts(id) ON DELETE CASCADE
 );
 

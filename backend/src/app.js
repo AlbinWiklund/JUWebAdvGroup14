@@ -85,6 +85,34 @@ app.get('/allusers/:id', async function(request, response){
     }
 })
 
+app.delete('/allusers/:id/delete', async function(request, response){
+	const authorizationHeaderValue = request.get("Authorization")
+	const accessToken = authorizationHeaderValue.substring(7)
+	
+	
+	jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async function(error, payload){
+		if(error){
+			response.status(401).end()
+		} else {
+			const connection = await pool.getConnection()
+	
+			try {
+				const query = "DELETE FROM accounts WHERE id = ?"
+
+				const values = [request.params.id]
+
+				const deletedAccount = connection.query(query, values)
+
+				response.status(200).json({accountDeleted: "true"})
+			} catch(error) {
+				response.status(400).json({error: "deleteFailed"})
+			} finally {
+				connection.release()
+			}
+		}
+	})
+})
+
 app.get('/allbooks', async function(request, response){
     const connection = await pool.getConnection()
 		console.log("all books")

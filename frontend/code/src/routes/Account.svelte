@@ -1,65 +1,123 @@
 <script>
-	import { Link } from "svelte-routing";
+	import { Link } from "svelte-routing"
 	import { user } from "../user-store.js"
-	
+	import Modal from "../lib/deleteModal.svelte"
 	export let accountId;
 
 	const fetchAccountPromise = fetch("http://localhost:8080/allusers/"+accountId)
+	
+	let deleteInProgress
+	let modalOpen = false
+	let accountDeleted = false
+
+	
+	const openModal = () => {
+		modalOpen = true;
+	}
+	
+	const closeModal = () => {
+		modalOpen = false
+		deleteInProgress = null
+	}
+	
+	async function deleteAccount () {
+		const response = await fetch("http://localhost:8080/allusers/"+$user.accountID+"/delete", {
+				method: "DELETE",
+				headers: {
+					"Authorization": "Bearer "+$user.accessToken
+				}
+			})
+		
+		switch(response.status){
+			case 200:
+				accountDeleted = true
+				$user.isLoggedIn = false
+				$user.accessToken = ""
+				$user.accountID = 0
+				break
+			case 400:
+				alert("Account failed to delete")
+				break
+		}
+	}
 </script>
 
-
-{#await fetchAccountPromise}
-	<p>Wait, I am loading...</p>
-{:then response}
-{#await response.json() then account}
-		{#if account}
-			<div id="grid">
-				<div id="about">
-					{#each account as acc (account.id)}
-						<div id="profilePic"> Jo </div>
-						<div id="name">{acc.username}</div>
-						<div id="rating">Rating: {acc.rating}</div>
-					{/each}
-				</div>
-				<div id="other">
-					<div id="listing">
-						<h2>
-							Product Listing
-						</h2>
-							{#each account as book (account.bookID)}
-								<Link to="/book/{book.bookID}">
-									<div class="listingItem">
-										{book.bookTitle}
-									</div>
-								</Link>
-							{/each}
+{#if accountDeleted}
+	<p>Account was delted.</p>
+{:else}
+	{#await fetchAccountPromise}
+		<p>Wait, I am loading...</p>
+	{:then response}
+	{#await response.json() then account}
+			{#if account}
+				<div id="grid">
+					<div id="about">
+						{#each account as acc (account.id)}
+							<div id="profilePic"> Jo </div>
+							<div id="name">{acc.username}</div>
+							<div id="rating">Rating: {acc.rating}</div>
+						{/each}
 					</div>
-					<div id="review">
-						<h2>
-							Reviews
-						</h2>
-							{#each account as review (account.reviewID)}
-								<Link to="/book/{review.bookId}">
-									<div class="reviewItem">
-										{review.reviewDescription}
-									</div>
-								</Link>
-							{/each}
+					<div id="other">
+						<div id="listing">
+							<h2>
+								Product Listing
+							</h2>
+								{#each account as book (account.bookID)}
+									<Link to="/book/{book.bookID}">
+										<div class="listingItem">
+											{book.bookTitle}
+										</div>
+									</Link>
+								{/each}
+						</div>
+						<div id="review">
+							<h2>
+								Reviews
+							</h2>
+								{#each account as review (account.reviewID)}
+									<Link to="/book/{review.bookId}">
+										<div class="reviewItem">
+											{review.reviewDescription}
+										</div>
+									</Link>
+								{/each}
+						</div>
 					</div>
 				</div>
-			</div>
-			{#if $user.accountID == account[0].id}
-				<button>Delete this account</button>
+				{#if $user.accountID == account[0].id}
+					<button on:click={openModal} id="deleteBtn">Delete this account</button>
+					<!-- Modal taken from  https://svelte.dev/repl/0299705b5e9e46be9e87fe4fef035bec?version=3.32.1-->
+					<Modal visible={modalOpen}>
+						{#if deleteInProgress}
+							{#await deleteInProgress then result}
+								<p>Thing deleted ({JSON.stringify(result)}).</p>
+								<button on:click={closeModal}>ok</button>
+							{:catch err}
+								<p>Could not delete the thing.</p>
+								<button on:click={closeModal}>ok</button>
+							{/await}
+						{:else}
+							<p>Are you sure you want to delete your account?</p>
+							<button on:click={deleteAccount}>yes</button>
+							<button on:click={closeModal}>no</button>
+						{/if}
+					</Modal>
+				{/if}
 			{/if}
-		{/if}
-		
-	{/await}
+			
+		{/await}
 
-{:catch error}
-	<p>Something whent wrong, try again later.</p>
-{/await}
+	{:catch error}
+		<p>Something whent wrong, try again later.</p>
+	{/await}
+{/if}
 
 <style>
+	#deleteBtn{
+		margin-top: 10px;
+	}
+
 	#grid{
 		display: grid;
 		grid-template-columns: 1fr;
