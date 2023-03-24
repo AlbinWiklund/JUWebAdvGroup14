@@ -2,6 +2,7 @@
 	import { Link } from "svelte-routing"
 	import { user } from "../user-store.js"
 	import Modal from "../lib/deleteModal.svelte"
+	
 	export let accountId;
 
 	const fetchAccountPromise = fetch("http://localhost:8080/allusers/"+accountId)
@@ -86,7 +87,7 @@
 					</div>
 				</div>
 				{#if $user.accountID == account[0].id}
-					<button on:click={openModal} id="deleteBtn">Delete this account</button>
+					<button on:click={openModal} class="deleteBtn" id="deleteBtn">Delete this account</button>
 					<!-- Modal taken from  https://svelte.dev/repl/0299705b5e9e46be9e87fe4fef035bec?version=3.32.1-->
 					<Modal visible={modalOpen}>
 						{#if deleteInProgress}

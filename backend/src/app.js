@@ -148,6 +148,33 @@ app.get('/allbooks/:id', async function(request, response){
     }
 })
 
+app.delete('/allbooks/:id/delete', async function(request, response){
+	const authorizationHeaderValue = request.get("Authorization")
+	const accessToken = authorizationHeaderValue.substring(7)
+	
+	
+	jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async function(error, payload){
+		if(error){
+			response.status(401).end()
+		} else {
+			const connection = await pool.getConnection()
+	
+			try {
+				const query = "DELETE FROM books WHERE id = ?"
+
+				const values = [request.params.id]
+
+				const deletedAccount = connection.query(query, values)
+
+				response.status(200).json({bookDeleted: "true"})
+			} catch(error) {
+				response.status(400).json({error: "deleteFailed"})
+			} finally {
+				connection.release()
+			}
+		}
+	})
+})
 /*app.get('/allbooks/:id/review', async function(request, response){
     const connection = await pool.getConnection()
 
