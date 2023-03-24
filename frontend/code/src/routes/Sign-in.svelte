@@ -4,6 +4,7 @@
 
 	let username = ""
 	let password = ""
+	let signInWasSuccessful = false
 
 	let errorMessages = []
 
@@ -40,19 +41,23 @@
 
 <h1>Sign in</h1>
 
-<form on:submit|preventDefault={signin} id="flex">
-	<label for="username">Username: <input type="text" bind:value={username}></label>
-	<label for="password">Password: <input type="password" bind:value={password}></label>
-	<button type="submit">Sign in</button>
-</form>
+{#if signInWasSuccessful}
+	<p>Welcome, {username}!</p>
+{:else}
+	<form on:submit|preventDefault={signin} id="flex">
+		<label for="username">Username: <input type="text" bind:value={username}></label>
+		<label for="password">Password: <input type="password" bind:value={password}></label>
+		<button type="submit">Sign in</button>
+	</form>
 
-{#if 0 < errorMessages.length}
-	<p>Error messages:</p>
-	<ul>
-		<li>
-			{errorMessages[0]}
-		</li>
-	</ul>
+	{#if 0 < errorMessages.length}
+		<p>Error messages:</p>
+		<ul>
+			<li>
+				{errorMessages[0]}
+			</li>
+		</ul>
+	{/if}
 {/if}
 
 <style>

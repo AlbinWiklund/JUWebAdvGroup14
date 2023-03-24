@@ -1,18 +1,18 @@
 <script>
 	import { Router, Link, Route } from "svelte-routing";
 	import { user } from "./user-store.js"
+	// import { jwt_decode } from "jwt-decode"
 
-	import Home from "./routes/Home.svelte";
-	import About from "./routes/About.svelte";
-	import Accounts from "./routes/Accounts.svelte";
-	import Profile from "./routes/Profile.svelte";
-	import Sell from "./routes/Sell.svelte";
-	import SignIn from "./routes/Sign-in.svelte";
-	import SignUp from "./routes/Sign-up.svelte";
-	import Product from "./routes/Product.svelte";
-	import Account from "./routes/Account.svelte";
-	import Review from "./routes/Review.svelte";
-
+	import Home from "./routes/Home.svelte"
+	import About from "./routes/About.svelte"
+	import Accounts from "./routes/Accounts.svelte"
+	import Sell from "./routes/Sell.svelte"
+	import SignIn from "./routes/Sign-in.svelte"
+	import SignUp from "./routes/Sign-up.svelte"
+	import Product from "./routes/Product.svelte"
+	import Account from "./routes/Account.svelte"
+	import Review from "./routes/Review.svelte"
+	import UpdateAccount from "./routes/Account-update.svelte"
 
 	export let url = "";
 
@@ -35,7 +35,7 @@
 				<li><button id="sign-up"><Link to="/signup">Sign Up</Link></button></li>
 			{:else if $user.isLoggedIn == true}
 				<li><Link to="/sell">Sell</Link></li>
-				<li><Link to="/profile">Profile</Link></li>
+				<li><Link to="/account/{$user.accountID}">Profile</Link></li>
 				<li><button id="sign-up" on:click={signOut}><Link to="/">Sign out</Link></button></li>
 			{/if}
 		</ul>
@@ -45,12 +45,12 @@
 		<Route path="/"><Home /></Route>
 		<Route path="/about" component={About} />
 		<Route path="/accounts" component={Accounts} />
-		<Route path="/profile" component={Profile} />
 		<Route path="/sell" component={Sell} />
 		<Route path="/signup" component={SignUp} />
 		<Route path="/signin" component={SignIn} />
 		<Route path="/product" component={Product} />
 		<Route path="/account/:accountId" component={Account} />
+		<Route path="/account/:accountId/update" component={UpdateAccount} />
 		<Route path="/book/:productId" component={Product} />
 		<Route path="/book/:productId/review" component={Review} />
 	</main>
