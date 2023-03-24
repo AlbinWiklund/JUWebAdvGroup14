@@ -13,6 +13,7 @@
 	import Account from "./routes/Account.svelte"
 	import Review from "./routes/Review.svelte"
 	import UpdateAccount from "./routes/Account-update.svelte"
+	import UpdateBook from "./routes/Product-update.svelte"
 
 	export let url = "";
 
@@ -53,6 +54,7 @@
 		<Route path="/account/:accountId/update" component={UpdateAccount} />
 		<Route path="/book/:productId" component={Product} />
 		<Route path="/book/:productId/review" component={Review} />
+		<Route path="/book/:productId/update" component={UpdateBook} />
 	</main>
 </Router>
 
