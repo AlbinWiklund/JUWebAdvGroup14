@@ -67,7 +67,7 @@
 
 </script>
 
-<h1>Sign up</h1>
+<h1>Update account info</h1>
 
 <form on:submit|preventDefault={updateAccount} id="flex">
 	<label for="username">Username: <input type="text" bind:value={username}></label>

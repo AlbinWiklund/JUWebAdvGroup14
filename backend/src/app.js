@@ -152,6 +152,65 @@ app.put('/account/:id/update', async function(request, response){
 	})
 })
 
+app.put('/book/:id/update', async function(request, response){
+	const authorizationHeaderValue = request.get("Authorization")
+	const accessToken = authorizationHeaderValue.substring(7)
+	const book = request.body
+	const errorMessages = []
+	console.log("----------------------------------!!!!!!" + book)
+
+	if(typeof book?.name != "string"){
+		errorMessages.push("titleIsMissing")
+	} else if(book.name.length > MAX_BOOK_TITLE_LENGTH){
+		errorMessages.push("titleIsTooLong")
+	} else if(book.name.length < MIN_BOOK_TITLE_LENGTH){
+		errorMessages.push("titleIsTooShort")
+	}
+
+	if(typeof book?.price != "number"){
+		errorMessages.push("priceIsMissing")
+	}
+
+	if(typeof book?.category != "string"){
+		errorMessages.push("categoryIsMissing")
+	}
+
+	if(typeof book?.description != "string"){
+		errorMessages.push("descriptionIsMissing")
+	} else if(book.description.length > MAX_DESCRIPTION_LENGTH){
+		errorMessages.push("descriptionIsTooLong")
+	} else if(book.description.length < MIN_DESCRIPTION_LENGTH){
+		errorMessages.push("descriptionIsTooShort")
+	}
+
+	if(errorMessages.length > 0){
+		response.status(400).json(errorMessages)
+		return
+	}
+
+	jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async function(error, payload){
+		if(error){
+			response.status(401).end()
+		} else {
+			const connection = await pool.getConnection()
+
+			try {
+				const query = 'UPDATE books SET name = ?, price = ?, category = ?, description = ?, accountId = ? WHERE id = ?'
+				console.log("-----------------------------???")
+				const values = [book.name, book.price, book.category, book.description, book.accountId, request.params.id]
+			
+				const updateBook = await connection.query(query, values)
+
+				response.status(200).end()
+			} catch (error) {
+				response.status(500).json({error: "serverError"})
+			} finally {
+				connection.release()
+			}
+		}
+	})
+})
+
 app.delete('/allusers/:id/delete', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
@@ -260,6 +319,9 @@ app.delete('/allbooks/:id/delete', async function(request, response){
 		}
 	})
 })
+
+
+
 /*app.get('/allbooks/:id/review', async function(request, response){
     const connection = await pool.getConnection()
 
