@@ -20,26 +20,6 @@
 			},
 			body: JSON.stringify(chosenCategory)
 		})
-
-		/*try {
-
-			
-
-			switch(fetchSales.status){
-				case 201:
-					salesGathered = true
-				break
-
-				case 400:
-					errorCodes = await fetchSales.json()
-				break
-			}
-
-		} catch (error) {
-			errorCodes.push("COMMUNICATION_ERROR")
-			errorCodes = errorCodes
-		}*/
-
 	}
 
 </script>
@@ -67,7 +47,7 @@
 		{#await response.json() then books}
 			{#if books}
 				{#each books as book (book.id)}
-					<Card bookName={book.name} productId={book.id} accountId={book.accountId}/>
+					<Card bookName={book.name} productId={book.id} accountId={book.accountID}/>
 				{/each}
 			{/if}
 		{/await}
