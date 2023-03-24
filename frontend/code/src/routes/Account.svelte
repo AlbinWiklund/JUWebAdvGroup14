@@ -2,7 +2,7 @@
 	import { Link } from "svelte-routing"
 	import { user } from "../user-store.js"
 	import Modal from "../lib/deleteModal.svelte"
-	
+
 	export let accountId;
 
 	const fetchAccountPromise = fetch("http://localhost:8080/allusers/"+accountId)
@@ -104,6 +104,9 @@
 							<button on:click={closeModal}>no</button>
 						{/if}
 					</Modal>
+					<Link to="/account/{accountId}/update">
+						<button>Update Account</button>
+					</Link>
 				{/if}
 			{/if}
 			

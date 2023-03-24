@@ -1,17 +1,18 @@
 <script>
 	import { Router, Link, Route } from "svelte-routing";
 	import { user } from "./user-store.js"
+	// import { jwt_decode } from "jwt-decode"
 
-	import Home from "./routes/Home.svelte";
-	import About from "./routes/About.svelte";
-	import Accounts from "./routes/Accounts.svelte";
-	import Sell from "./routes/Sell.svelte";
-	import SignIn from "./routes/Sign-in.svelte";
-	import SignUp from "./routes/Sign-up.svelte";
-	import Product from "./routes/Product.svelte";
-	import Account from "./routes/Account.svelte";
-	import Review from "./routes/Review.svelte";
-
+	import Home from "./routes/Home.svelte"
+	import About from "./routes/About.svelte"
+	import Accounts from "./routes/Accounts.svelte"
+	import Sell from "./routes/Sell.svelte"
+	import SignIn from "./routes/Sign-in.svelte"
+	import SignUp from "./routes/Sign-up.svelte"
+	import Product from "./routes/Product.svelte"
+	import Account from "./routes/Account.svelte"
+	import Review from "./routes/Review.svelte"
+	import UpdateAccount from "./routes/Account-update.svelte"
 
 	export let url = "";
 
@@ -49,6 +50,7 @@
 		<Route path="/signin" component={SignIn} />
 		<Route path="/product" component={Product} />
 		<Route path="/account/:accountId" component={Account} />
+		<Route path="/account/:accountId/update" component={UpdateAccount} />
 		<Route path="/book/:productId" component={Product} />
 		<Route path="/book/:productId/review" component={Review} />
 	</main>

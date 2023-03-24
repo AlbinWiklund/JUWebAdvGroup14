@@ -51,7 +51,7 @@ app.get('/allusers', async function(request, response){
         response.status(200).json(accounts)
     } catch(error) {
         console.log(error)
-        response.status(500).end("Internal server error.")
+        response.status(500).json({error: "Internal server error."})
     } finally {
         connection.release()
     }
@@ -79,10 +79,77 @@ app.get('/allusers/:id', async function(request, response){
 				}
     } catch (error) {
         console.log(error)
-        response.status(500).end("Internal server error.")
+        response.status(500).json({error: "Internal server error."})
     } finally {
         connection.release()
     }
+})
+
+app.put('/account/:id/update', async function(request, response){
+	const authorizationHeaderValue = request.get("Authorization")
+	const accessToken = authorizationHeaderValue.substring(7)
+	const account = request.body
+
+	const errorMessages = []
+
+	if(typeof account?.username != "string"){
+		errorMessages.push("usernameIsMissing")
+	}	else if(account.username.length > MAX_NAME_LENGTH){
+		errorMessages.push("usernameTooLong")
+	} else if(account.username.length < MIN_NAME_LENGTH){
+		errorMessages.push("usernameTooShort")
+	}
+
+	if(typeof account?.name != "string"){
+		errorMessages.push("nameIsMissing")
+	}	else if(account.name.length > MAX_NAME_LENGTH){
+		errorMessages.push("nameTooLong")
+	} else if(account.name.length < MIN_NAME_LENGTH){
+		errorMessages.push("nameTooShort")
+	}
+
+	if(typeof account?.surname != "string"){
+		errorMessages.push("surnameIsMissing")
+	}	else if(account.surname.length > MAX_NAME_LENGTH){
+		errorMessages.push("surnameTooLong")
+	} else if(account.surname.length < MIN_NAME_LENGTH){
+		errorMessages.push("surnameTooShort")
+	}
+
+	if(typeof account?.password != "string"){
+		errorMessages.push("password missing")
+	} else if(account.password.length > MAX_PASSWORD_LENGTH){
+		errorMessages.push("passwordTooLong")
+	} else if(account.password.length < MIN_PASSWORD_LENGTH){
+		errorMessages.push("passwordTooShort")
+	}
+
+	if(errorMessages.length > 0){
+		response.status(400).json(errorMessages)
+		return
+	}
+
+	jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async function(error, payload){
+		if(error){
+			response.status(401).end()
+		} else {
+			const connection = await pool.getConnection()
+
+			try {
+				const query = "UPDATE accounts SET username = ?, name = ?, surname = ?, password = ? WHERE id = ?"
+
+				const values = [account.username, account.name, account.surname, account.password, account.accountId]
+
+				const updatedAccount = await connection.query(query, values)
+
+				response.status(200).end()
+			} catch(error) {
+				response.status(500).json({error: "serverError"})
+			} finally {
+				connection.release()
+			}
+		}
+	})
 })
 
 app.delete('/allusers/:id/delete', async function(request, response){
@@ -113,6 +180,24 @@ app.delete('/allusers/:id/delete', async function(request, response){
 	})
 })
 
+app.get('/account/:id', async function(request, response){
+	const connection = await pool.getConnection()
+
+    try {
+			const query = "SELECT * FROM accounts WHERE id = ?"
+
+			const values = [request.params.id]
+
+			const account = await connection.query(query, values)
+
+			response.status(200).json(account)
+		} catch(error) {
+			response.status(500).json({error: "Could not recieve account"})
+		} finally {
+			connection.release()
+		}
+})
+
 app.get('/allbooks', async function(request, response){
     const connection = await pool.getConnection()
 		console.log("all books")
@@ -124,7 +209,7 @@ app.get('/allbooks', async function(request, response){
         response.status(200).json(books)
     } catch(error) {
         console.log(error)
-        response.status(500).end("Internal server error.")
+        response.status(500).json({error: "Internal server error"})
     } finally {
         connection.release()
     }
@@ -142,7 +227,7 @@ app.get('/allbooks/:id', async function(request, response){
         response.status(200).json(selectedBook)
     } catch (error) {
         console.log(error)
-        response.status(500).end("Internal server error.")
+        response.status(500).json({error: "Internal server error."})
     } finally {
         connection.release()
     }
@@ -238,7 +323,7 @@ app.post('/allbooks/:id/review', async function(request, response){
 			response.status(201).end()
     } catch (error) {
         console.log(error)
-        response.status(500).end("Internal server error.")
+        response.status(500).json({error: "Internal server error."})
     } finally {
         connection.release()
     }
@@ -296,7 +381,7 @@ app.post('/sellbook', async function(request, response){
 					response.status(201).end()
 			} catch (error) {
 					console.log(error)
-					response.status(500).end("Internal server error.")
+					response.status(500).json({error: "Internal server error."})
 			} finally {
 					connection.release()
 			}
@@ -390,7 +475,7 @@ app.post('/signup', async function(request, response){
 			console.log("------------------------ after status code 201 is sent as response")
 	} catch (error) {
 			console.log("-------------------------_", error)
-			response.status(500).end("Internal server error")
+			response.status(500).json({error: "Internal server error."})
 	} finally {
 			connection.release()
 	}
@@ -465,7 +550,7 @@ app.post('/allbooks/bycategory', async function(request, response){
 		response.status(200).json(books)
 	} catch (error) {
 		console.log(error)
-		response.status(500).end("Internal server error.")
+		response.status(500).json({error: "Internal server error."})
 	} finally {
 		connection.release()
 	}
