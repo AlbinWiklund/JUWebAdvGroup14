@@ -61,7 +61,7 @@ app.get('/allusers/:id', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
-        const query =  `SELECT accounts.id AS id, accounts.username AS username, books.id AS bookID, books.name AS bookTitle, reviews.id AS reviewID, reviews.review AS reviewDescription FROM accounts JOIN books ON accounts.id = books.accountID JOIN reviews ON accounts.id = reviews.accountID WHERE accounts.id = ?`
+        const query =  `SELECT accounts.id AS id, accounts.username AS username, books.id AS bookID, books.name AS bookTitle, reviews.id AS reviewID, reviews.review AS reviewDescription, reviews.reviewerID as reviewerID FROM accounts JOIN books ON accounts.id = books.accountID JOIN reviews ON accounts.id = reviews.accountID WHERE accounts.id = ?`
         
         const value = [request.params.id]
 				
@@ -312,7 +312,7 @@ app.delete('/allbooks/:id/delete', async function(request, response){
 
 				response.status(200).json({bookDeleted: "true"})
 			} catch(error) {
-				response.status(400).json({error: "deleteFailed"})
+				response.status(500).json({error: "deleteFailed"})
 			} finally {
 				connection.release()
 			}
@@ -372,15 +372,11 @@ app.post('/allbooks/:id/review', async function(request, response){
 
 			const parsedBookObject = JSON.parse(stringBookObject)
 
-			const query = 'INSERT INTO reviews(review, rating, accountID) VALUES (?, ?, ?)'
-
-			console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + request.body.review)
-			console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB " + request.body.rating)
-			console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC " + parsedBookObject[0].accountID)
-
-			const values = [request.body.review, request.body.rating, parsedBookObject[0].accountID]
+			const query = 'INSERT INTO reviews(review, rating, accountID, reviewerID) VALUES (?, ?, ?, ?)'
+			console.log("---------------_____/////-------------------",review)
+			const values = [review.review, review.rating, parsedBookObject[0].accountID, review.reviewerId]
 			
-			const review = await connection.query(query, values)
+			const reviewResult = await connection.query(query, values)
 
 			response.status(201).end()
     } catch (error) {
@@ -389,6 +385,102 @@ app.post('/allbooks/:id/review', async function(request, response){
     } finally {
         connection.release()
     }
+})
+
+app.get('/review/:id', async function(request, response){
+	console.log("this is the review id: ", request.params.id)
+	const connection = await pool.getConnection()
+    try {
+        const query = 'SELECT * FROM reviews WHERE id = ?'
+
+        const value = [request.params.id]
+
+        const selectedReview = await connection.query(query, value)
+				console.log("this is supposed to be the review", selectedReview) // 											A CONSOLE LOG __----------------
+        response.status(200).json(selectedReview)
+    } catch (error) {
+        console.log(error)
+        response.status(500).json({error: "Internal server error."})
+    } finally {
+        connection.release()
+    }
+})
+
+app.put('/review/:id/update', async function(request, response){
+	const authorizationHeaderValue = request.get("Authorization")
+	const accessToken = authorizationHeaderValue.substring(7)
+	
+	const review = request.body
+
+	const errorMessages = []
+
+	if(typeof review?.review != "string"){
+		errorMessages.push("missingReview")
+	} else if(review.review.length > MAX_REVIEW_LENGTH){
+		errorMessages.push("reviewTooLong")
+	} else if(review.review.length < MIN_REVIEW_LENGTH){
+		errorMessages.push("reviewTooShort")
+	}
+
+	if(typeof review?.rating != "string"){
+		console.log(review.rating)
+		errorMessages.push("missingRating")
+	}
+
+	if(errorMessages.length > 0){
+		response.status(400).json(errorMessages)
+		return
+	}
+
+	jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async function(error, payload){
+		if(error){
+			response.status(401).end()
+		} else {
+			const connection = await pool.getConnection()
+
+			try {
+				const query = "UPDATE reviews SET review = ?, rating = ? WHERE id = ?"
+
+				const values = [review.review, review.rating, request.params.id]
+
+				const updatedAccount = await connection.query(query, values)
+
+				response.status(200).end()
+			} catch(error) {
+				response.status(500).json({error: "serverError"})
+			} finally {
+				connection.release()
+			}
+		}
+	})
+})
+
+app.delete('/review/:id/delete', async function(request, response){
+	const authorizationHeaderValue = request.get("Authorization")
+	const accessToken = authorizationHeaderValue.substring(7)
+	
+	
+	jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async function(error, payload){
+		if(error){
+			response.status(401).end()
+		} else {
+			const connection = await pool.getConnection()
+	
+			try {
+				const query = "DELETE FROM reviews WHERE id = ?"
+
+				const values = [request.params.id]
+
+				const deletedAccount = connection.query(query, values)
+
+				response.status(200).json({reviewDeleted: "true"})
+			} catch(error) {
+				response.status(500).json({error: "deleteFailed"})
+			} finally {
+				connection.release()
+			}
+		}
+	})
 })
 
 app.post('/sellbook', async function(request, response){

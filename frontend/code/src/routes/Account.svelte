@@ -36,7 +36,7 @@
 				$user.accessToken = ""
 				$user.accountID = 0
 				break
-			case 400:
+			case 500:
 				alert("Account failed to delete")
 				break
 		}
@@ -82,6 +82,14 @@
 											{review.reviewDescription}
 										</div>
 									</Link>
+									{#if review.reviewerID == $user.accountID}
+										<Link to="/review/{review.reviewID}/update">
+											<button>Update</button>
+										</Link>
+										<Link to="/review/{review.reviewID}/delete">
+											<button class="deleteBtn">Delete</button>
+										</Link>
+									{/if}
 								{/each}
 						</div>
 					</div>

@@ -12,6 +12,8 @@
 	import Product from "./routes/Product.svelte"
 	import Account from "./routes/Account.svelte"
 	import Review from "./routes/Review.svelte"
+	import UpdateReview from "./routes/Review-update.svelte"
+	import DeleteReview from "./routes/Review-delete.svelte"
 	import UpdateAccount from "./routes/Account-update.svelte"
 	import UpdateBook from "./routes/Product-update.svelte"
 
@@ -54,6 +56,8 @@
 		<Route path="/account/:accountId/update" component={UpdateAccount} />
 		<Route path="/book/:productId" component={Product} />
 		<Route path="/book/:productId/review" component={Review} />
+		<Route path="/review/:reviewId/update" component={UpdateReview} />
+		<Route path="/review/:reviewId/delete" component={DeleteReview} />
 		<Route path="/book/:productId/update" component={UpdateBook} />
 	</main>
 </Router>
