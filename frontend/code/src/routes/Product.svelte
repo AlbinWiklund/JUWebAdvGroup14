@@ -77,6 +77,11 @@
 								<button on:click={openModal} class="deleteBtn">
 									Delete book
 								</button>
+								<Link to="/book/{productId}/update">
+									<button>
+										Update Book
+									</button>
+								</Link>
 								<Modal visible={modalOpen}>
 									{#if deleteInProgress}
 										{#await deleteInProgress then result}
@@ -92,7 +97,9 @@
 										<button on:click={closeModal}>no</button>
 									{/if}
 								</Modal>
+
 							{:else}
+								
 								<Link to="/book/{productId}/review">
 									<button>
 										Buy Book
