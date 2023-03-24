@@ -82,6 +82,11 @@
 											{review.reviewDescription}
 										</div>
 									</Link>
+									{#if review.reviewerID == $user.accountID}
+										<Link to="/review/{review.reviewID}/update">
+											<button>Update Review</button>
+										</Link>
+									{/if}
 								{/each}
 						</div>
 					</div>

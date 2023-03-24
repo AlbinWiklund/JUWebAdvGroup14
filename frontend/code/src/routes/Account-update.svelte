@@ -22,9 +22,6 @@
 				surname = account[0].surname
 				password = account[0].password
 				break
-			case 400:
-				errorMessages = await response.json()
-				break
 			case 500:
 				errorMessages = await response.json()
 				break

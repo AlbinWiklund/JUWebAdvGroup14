@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS reviews(
     review VARCHAR(50),
     rating INT,
     accountID INT,
-    FOREIGN KEY (accountID) REFERENCES accounts(id) ON DELETE CASCADE
+		reviewerID INT,
+    FOREIGN KEY (accountID) REFERENCES accounts(id) ON DELETE CASCADE,
+    FOREIGN KEY (reviewerID) REFERENCES accounts(id) ON DELETE CASCADE
 );
 
