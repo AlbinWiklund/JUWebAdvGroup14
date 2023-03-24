@@ -253,7 +253,7 @@ app.delete('/allbooks/:id/delete', async function(request, response){
 
 				response.status(200).json({bookDeleted: "true"})
 			} catch(error) {
-				response.status(400).json({error: "deleteFailed"})
+				response.status(500).json({error: "deleteFailed"})
 			} finally {
 				connection.release()
 			}
@@ -386,6 +386,34 @@ app.put('/review/:id/update', async function(request, response){
 				response.status(200).end()
 			} catch(error) {
 				response.status(500).json({error: "serverError"})
+			} finally {
+				connection.release()
+			}
+		}
+	})
+})
+
+app.delete('/review/:id/delete', async function(request, response){
+	const authorizationHeaderValue = request.get("Authorization")
+	const accessToken = authorizationHeaderValue.substring(7)
+	
+	
+	jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async function(error, payload){
+		if(error){
+			response.status(401).end()
+		} else {
+			const connection = await pool.getConnection()
+	
+			try {
+				const query = "DELETE FROM reviews WHERE id = ?"
+
+				const values = [request.params.id]
+
+				const deletedAccount = connection.query(query, values)
+
+				response.status(200).json({reviewDeleted: "true"})
+			} catch(error) {
+				response.status(500).json({error: "deleteFailed"})
 			} finally {
 				connection.release()
 			}
