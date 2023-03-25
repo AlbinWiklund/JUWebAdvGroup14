@@ -1,6 +1,9 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 import { createPool } from 'mariadb'
+
+const saltRounds = 10
 
 const ACCESS_TOKEN_SECRET = "kjhkyfgdbwygcvdsfsdfs"
 const MAX_BOOK_TITLE_LENGTH = 50
@@ -575,7 +578,7 @@ app.post('/signup', async function(request, response){
 	} else if(account.username.length < MIN_NAME_LENGTH){
 		errorMessages.push("usernameTooShort")
 	}
-
+	
 	if(typeof account?.name != "string"){
 		errorMessages.push("nameIsMissing")
 	}	else if(account.name.length > MAX_NAME_LENGTH){
@@ -583,7 +586,7 @@ app.post('/signup', async function(request, response){
 	} else if(account.name.length < MIN_NAME_LENGTH){
 		errorMessages.push("nameTooShort")
 	}
-
+	
 	if(typeof account?.surname != "string"){
 		errorMessages.push("surnameIsMissing")
 	}	else if(account.surname.length > MAX_NAME_LENGTH){
@@ -591,7 +594,7 @@ app.post('/signup', async function(request, response){
 	} else if(account.surname.length < MIN_NAME_LENGTH){
 		errorMessages.push("surnameTooShort")
 	}
-
+	
 	if(typeof account?.password != "string"){
 		errorMessages.push("password missing")
 	} else if(account.password.length > MAX_PASSWORD_LENGTH){
@@ -599,41 +602,41 @@ app.post('/signup', async function(request, response){
 	} else if(account.password.length < MIN_PASSWORD_LENGTH){
 		errorMessages.push("passwordTooShort")
 	}
-
+	
 	if(errorMessages.length > 0){
 		response.status(400).json(errorMessages)
 		return
 	}
-
-	const connection = await pool.getConnection()
-
 	
-	const usernameQuery = 'SELECT accounts.username AS username from accounts WHERE username = ?'
+	bcrypt.hash(account.password, saltRounds, async function(err, hash) {
+		const connection = await pool.getConnection()
 
-	const usernameValues = [account.username]
-
-	const accountUsername = await connection.query(usernameQuery, usernameValues)
-
-	if(accountUsername[0] != undefined){
-		response.status(400).json(["usernameAlreadyExists"])
-		return
-	}
-	try {
+		const usernameQuery = 'SELECT accounts.username AS username from accounts WHERE username = ?'
+		
+		const usernameValues = [account.username]
+		
+		const accountUsername = await connection.query(usernameQuery, usernameValues)
+		
+		if(accountUsername[0] != undefined){
+			response.status(400).json(["usernameAlreadyExists"])
+			return
+		}
+		try {
 			const query = 'INSERT INTO accounts(username, password, name, surname) VALUES (?, ?, ?, ?)'
 			
-			const values = [account.username, account.password, account.name, account.surname]
-
+			const values = [account.username, hash, account.name, account.surname]
+	
 			const signUpAccount = await connection.query(query, values)
-
+	
 			response.status(201).end()
 			console.log("------------------------ after status code 201 is sent as response")
-	} catch (error) {
+		} catch (error) {
 			console.log("-------------------------_", error)
 			response.status(500).json({error: "Internal server error."})
-	} finally {
+		} finally {
 			connection.release()
-	}
-
+		}
+  })
 })
 
 app.post('/signin', async function(request, response){
@@ -642,43 +645,61 @@ app.post('/signin', async function(request, response){
 	const password = request.body.password
 
 	if(grantType != "password"){
-		response.status(400).json({error: "unsupporter_grant_type"})
+		response.status(400).json(["unsupporter_grant_type"])
 		return
 	} 
 	
 	const connection = await pool.getConnection()
+	console.log("-------------------___---------__---_--_-----1")
 	
 	try {
-		const query = 'SELECT * FROM accounts WHERE username = ? AND password = ?'
-
+		const query = 'SELECT * FROM accounts WHERE username = ?'
+		console.log("-------------------___---------__---_--_-----2")
 		const values = [username, password]
 
 		const signInAccount = await connection.query(query, values)
-		
-		if(signInAccount[0].username == username && signInAccount[0].password == password){
-			
-			const payload = {
+		console.log("-------------------___---------__---_--_-----3")
+		const passwordResult = await bcrypt.compare(password, signInAccount[0].password)
+		console.log("-------------------___---------__---_--_-----4")
+		if(signInAccount[0].username == username && passwordResult){
+			console.log("-------------------___---------__---_--_-----5",signInAccount[0].username, "==", username, "&&",  passwordResult)
+			const accessTokenPayload = {
 				sub: signInAccount[0].id,
 				isLoggedIn: true,
 			}
-			console.log("---------------This is the payload: ", payload) //Console log
+			console.log("-------------------___---------__---_--_-----6")
+			console.log("-------------------___---------__---_--_-----7")
 			
-			jwt.sign(payload, ACCESS_TOKEN_SECRET, async function(error, accessToken){
+			jwt.sign(accessTokenPayload, ACCESS_TOKEN_SECRET, async function(error, accessToken){
 				if(error){
 					response.status(500).end()
 				} else {
-					response.status(200).json({
-						access_token: accessToken,
-						type: "bearer",
-						accountID: signInAccount[0].id
+					console.log
+					const idTokenPayload = {
+						iss: "http://localhost:8080",
+						sub: signInAccount[0].id,
+						aud: "Kunskapsmagazinet",
+						exp: Math.floor(Date.now() / 1000)+600,
+						username: signInAccount[0].username
+					}
+					jwt.sign(idTokenPayload, ACCESS_TOKEN_SECRET, async function(error, idToken){
+						if(error){
+							response.status(500).end()
+						} else {
+							response.status(200).json({
+								access_token: accessToken,
+								type: "bearer",
+								id_token: idToken,
+							})
+						}
 					})
 				}
 			})
 		} else {
-			response.status(400).json({error: "invalid_grant"})
+			response.status(400).json(["invalid_grant"])
 		}
 	} catch (error) {
-		response.status(400).json({error: "no_account"})
+		response.status(400).json(["No account matching username"])
 	} finally {
 		connection.release()
 	}

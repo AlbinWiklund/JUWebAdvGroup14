@@ -1,13 +1,12 @@
 <script>
 	import { user } from "../user-store.js"
-
+	import jwt_decode from 'jwt-decode'
 
 	let username = ""
 	let password = ""
-	let signInWasSuccessful = false
 
 	let errorMessages = []
-
+	
 	async function signin(){
 		const response = await fetch("http://localhost:8080/signin", {
 			method: "POST",
@@ -17,22 +16,30 @@
 			body: `grant_type=password&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
 		})
 
+		errorMessages = []
+
 		const body = await response.json()
 
 		switch(response.status){
 			case 200:
+				const idToken = jwt_decode(body.id_token)
+				console.log(idToken)
 				const accessToken = body.access_token
-				const accountID = body.accountID
+				// @ts-ignore
+				const accountID = idToken.sub
+				// @ts-ignore
+				const username = idToken.username
 
 				$user = {
 					isLoggedIn: true,
 					accessToken,
 					accountID,
+					username,
 				}
 				break
 
 			case 400:
-				errorMessages = ["Wrong username or password"]
+				errorMessages = body
 				console.log(errorMessages)
 				break
 		}
@@ -41,8 +48,8 @@
 
 <h1>Sign in</h1>
 
-{#if signInWasSuccessful}
-	<p>Welcome, {username}!</p>
+{#if $user.isLoggedIn}
+	<p>Welcome, {$user.username}!</p>
 {:else}
 	<form on:submit|preventDefault={signin} id="flex">
 		<label for="username">Username: <input type="text" bind:value={username}></label>
@@ -53,9 +60,9 @@
 	{#if 0 < errorMessages.length}
 		<p>Error messages:</p>
 		<ul>
-			<li>
-				{errorMessages[0]}
-			</li>
+			{#each errorMessages as errorMessage}
+				<li>{errorMessage}</li>
+			{/each}
 		</ul>
 	{/if}
 {/if}
