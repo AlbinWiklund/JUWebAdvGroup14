@@ -4,8 +4,6 @@
   export let bookName;
   export let productId;
   export let accountId;
-
-  console.log("this is the accountid: ", accountId)
 </script>
 
 <div class="card">

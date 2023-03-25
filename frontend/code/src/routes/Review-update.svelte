@@ -17,7 +17,6 @@
 		switch (response.status){
 			case 200:
 				const oldReview = await response.json()
-				console.log("this is the review", oldReview)
 				review = oldReview[0].review
 				rating = oldReview[0].rating
 				reviewerId = oldReview[0].reviewerID
@@ -54,7 +53,6 @@
 			switch(response.status){
 				case 200:
 					reviewWasUpdated = true
-					console.log("review was created:", reviewWasUpdated)
 				break
 
 				case 400:

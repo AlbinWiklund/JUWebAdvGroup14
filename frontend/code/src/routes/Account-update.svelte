@@ -16,7 +16,6 @@
 		switch (response.status){
 			case 200:
 				const account = await response.json()
-				console.log("this is the account", account)
 				username = account[0].username
 				name = account[0].name
 				surname = account[0].surname
@@ -53,7 +52,6 @@
 			switch(response.status){
 				case 200:
 					accountWasUpdated = true
-					console.log("Account was updated")
 				break
 
 				case 400:

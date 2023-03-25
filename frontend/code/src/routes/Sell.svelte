@@ -18,9 +18,8 @@
 			description,
 			accountID,
 		}
-		console.log(name)
+
 		try {
-			console.log(price)
 			const response = await fetch("http://localhost:8080/sellbook", {
 				method: "POST",
 				headers: {

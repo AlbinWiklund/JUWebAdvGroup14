@@ -53,7 +53,6 @@ app.get('/allusers', async function(request, response){
 
         response.status(200).json(accounts)
     } catch(error) {
-        console.log(error)
         response.status(500).json({error: "Internal server error."})
     } finally {
         connection.release()
@@ -84,7 +83,6 @@ app.get('/allusers/:id', async function(request, response){
 
 				response.status(200).json(accountInformation)
     } catch (error) {
-        console.log(error)
         response.status(500).json({error: "Internal server error."})
     } finally {
         connection.release()
@@ -163,7 +161,6 @@ app.put('/book/:id/update', async function(request, response){
 	const accessToken = authorizationHeaderValue.substring(7)
 	const book = request.body
 	const errorMessages = []
-	console.log("----------------------------------!!!!!!" + book)
 
 	if(typeof book?.name != "string"){
 		errorMessages.push("titleIsMissing")
@@ -202,7 +199,6 @@ app.put('/book/:id/update', async function(request, response){
 
 			try {
 				const query = 'UPDATE books SET name = ?, price = ?, category = ?, description = ?, accountId = ? WHERE id = ?'
-				console.log("-----------------------------???")
 				const values = [book.name, book.price, book.category, book.description, book.accountId, request.params.id]
 			
 				const updateBook = await connection.query(query, values)
@@ -265,15 +261,14 @@ app.get('/account/:id', async function(request, response){
 
 app.get('/books', async function(request, response){
     const connection = await pool.getConnection()
-		console.log("all books")
+
     try {
         const query = 'SELECT * FROM books ORDER BY name'
 
         const books = await connection.query(query)
-				console.log("inside all books")
+
         response.status(200).json(books)
     } catch(error) {
-        console.log(error)
         response.status(500).json({error: "Internal server error"})
     } finally {
         connection.release()
@@ -288,10 +283,9 @@ app.get('/allbooks/:id', async function(request, response){
         const value = [request.params.id]
 
         const selectedBook = await connection.query(query, value)
-				console.log(selectedBook)
+
         response.status(200).json(selectedBook)
     } catch (error) {
-        console.log(error)
         response.status(500).json({error: "Internal server error."})
     } finally {
         connection.release()
@@ -326,21 +320,6 @@ app.delete('/allbooks/:id/delete', async function(request, response){
 	})
 })
 
-
-
-/*app.get('/allbooks/:id/review', async function(request, response){
-    const connection = await pool.getConnection()
-
-    try {
-
-    } catch (error) {
-        console.log(error)
-        response.status(500).end("Internal server error.")
-    } finally {
-        connection.release()
-    }
-})*/
-
 app.post('/allbooks/:id/review', async function(request, response){
 
 	const review = request.body
@@ -356,7 +335,6 @@ app.post('/allbooks/:id/review', async function(request, response){
 	}
 
 	if(typeof review?.rating != "string"){
-		console.log(review.rating)
 		errorMessages.push("missingRating")
 	}
 
@@ -390,7 +368,6 @@ app.post('/allbooks/:id/review', async function(request, response){
 
 			response.status(201).end()
     } catch (error) {
-        console.log(error)
         response.status(500).json({error: "Internal server error."})
     } finally {
         connection.release()
@@ -398,18 +375,16 @@ app.post('/allbooks/:id/review', async function(request, response){
 })
 
 app.get('/review/:id', async function(request, response){
-	console.log("this is the review id: ", request.params.id)
 	const connection = await pool.getConnection()
+
     try {
         const query = 'SELECT * FROM reviews WHERE id = ?'
 
         const value = [request.params.id]
 
         const selectedReview = await connection.query(query, value)
-				console.log("this is supposed to be the review", selectedReview) // 											A CONSOLE LOG __----------------
         response.status(200).json(selectedReview)
     } catch (error) {
-        console.log(error)
         response.status(500).json({error: "Internal server error."})
     } finally {
         connection.release()
@@ -433,7 +408,6 @@ app.put('/review/:id/update', async function(request, response){
 	}
 
 	if(typeof review?.rating != "string"){
-		console.log(review.rating)
 		errorMessages.push("missingRating")
 	}
 
@@ -544,7 +518,6 @@ app.post('/sellbook', async function(request, response){
 		
 					response.status(201).end()
 			} catch (error) {
-					console.log(error)
 					response.status(500).json({error: "Internal server error."})
 			} finally {
 					connection.release()
@@ -553,26 +526,6 @@ app.post('/sellbook', async function(request, response){
 	})
 
 })
-
-/*app.get('/:id', async function(request, response){
-    const connection = await pool.getConnection()
-
-    try {
-        const id = request.params.id
-
-        const query = 'SELECT * FROM accounts WHERE id = ?'
-
-        const account = await connection.query(query, [id])
-
-        response.status(200).json(account)
-    } catch(error) {
-        console.log(error)
-        response.status(500).end("Internal server error.")
-    } finally {
-        connection.release()
-    }
-
-})*/
 
 app.post('/signup', async function(request, response){
 	const account = request.body
@@ -636,9 +589,7 @@ app.post('/signup', async function(request, response){
 			const signUpAccount = await connection.query(query, values)
 	
 			response.status(201).end()
-			console.log("------------------------ after status code 201 is sent as response")
 		} catch (error) {
-			console.log("-------------------------_", error)
 			response.status(500).json({error: "Internal server error."})
 		} finally {
 			connection.release()
@@ -657,31 +608,26 @@ app.post('/signin', async function(request, response){
 	} 
 	
 	const connection = await pool.getConnection()
-	console.log("-------------------___---------__---_--_-----1")
 	
 	try {
 		const query = 'SELECT * FROM accounts WHERE username = ?'
-		console.log("-------------------___---------__---_--_-----2")
+
 		const values = [username, password]
 
 		const signInAccount = await connection.query(query, values)
-		console.log("-------------------___---------__---_--_-----3")
+
 		const passwordResult = await bcrypt.compare(password, signInAccount[0].password)
-		console.log("-------------------___---------__---_--_-----4")
+
 		if(signInAccount[0].username == username && passwordResult){
-			console.log("-------------------___---------__---_--_-----5",signInAccount[0].username, "==", username, "&&",  passwordResult)
 			const accessTokenPayload = {
 				sub: signInAccount[0].id,
 				isLoggedIn: true,
 			}
-			console.log("-------------------___---------__---_--_-----6")
-			console.log("-------------------___---------__---_--_-----7")
 			
 			jwt.sign(accessTokenPayload, ACCESS_TOKEN_SECRET, async function(error, accessToken){
 				if(error){
 					response.status(500).end()
 				} else {
-					console.log
 					const idTokenPayload = {
 						iss: "http://localhost:8080",
 						sub: signInAccount[0].id,
@@ -731,35 +677,10 @@ app.post('/allbooks/bycategory', async function(request, response){
 
 		response.status(200).json(books)
 	} catch (error) {
-		console.log(error)
 		response.status(500).json({error: "Internal server error."})
 	} finally {
 		connection.release()
 	}
 })
-
-/*app.get('/accounts', async function(request, response){
-    const connection = await pool.getConnection()
-		console.log("accounts post request")
-    try {
-        const query = 'SELECT * FROM accounts ORDER BY name'
-
-        const accounts = await connection.query(query)
-				console.log(accounts)
-        response.status(200).json(accounts)
-    } catch(error) {
-        console.log(error)
-        response.status(500).end("Internal server error.")
-    } finally {
-        connection.release()
-    }
-})
-
-app.get('/', function(request, response){
-    console.log("Hola!")
-    response.send('It works!')
-})
-
-console.log("listening on 80808")*/
 
 app.listen(8080)

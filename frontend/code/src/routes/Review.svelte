@@ -33,7 +33,6 @@
 			switch(response.status){
 				case 201:
 					reviewWasCreated = true
-					console.log("review was created:", reviewWasCreated)
 				break
 
 				case 400:

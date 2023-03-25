@@ -23,8 +23,8 @@
 		switch(response.status){
 			case 200:
 				const idToken = jwt_decode(body.id_token)
-				console.log(idToken)
 				const accessToken = body.access_token
+				//Have to have these as last resort, wanted to make an interface but JS does not support interfaces
 				// @ts-ignore
 				const accountID = idToken.sub
 				// @ts-ignore
@@ -40,7 +40,6 @@
 
 			case 400:
 				errorMessages = body
-				console.log(errorMessages)
 				break
 		}
 	}
