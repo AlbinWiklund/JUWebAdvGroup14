@@ -1,5 +1,4 @@
 <script>
-	import { Link } from "svelte-routing";
 	import { user } from "../user-store.js"
 
 	let name = ""
@@ -18,9 +17,8 @@
 			description,
 			accountID,
 		}
-		console.log(name)
+
 		try {
-			console.log(price)
 			const response = await fetch("http://localhost:8080/sellbook", {
 				method: "POST",
 				headers: {
@@ -29,6 +27,8 @@
 				},
 				body: JSON.stringify(sale)
 			})
+
+			errorMessages = []
 
 			switch(response.status){
 				case 201:

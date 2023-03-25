@@ -1,5 +1,4 @@
 <script>
-	import { Link } from "svelte-routing";
 	import { user } from "../user-store.js"
 
 	export let reviewId;
@@ -17,7 +16,6 @@
 		switch (response.status){
 			case 200:
 				const oldReview = await response.json()
-				console.log("this is the review", oldReview)
 				review = oldReview[0].review
 				rating = oldReview[0].rating
 				reviewerId = oldReview[0].reviewerID
@@ -49,10 +47,11 @@
 				body: JSON.stringify(comment),
 			})
 
+			errorMessages = []
+
 			switch(response.status){
 				case 200:
 					reviewWasUpdated = true
-					console.log("review was created:", reviewWasUpdated)
 				break
 
 				case 400:

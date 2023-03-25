@@ -5,17 +5,11 @@
 
 	export let accountId;
 
-	async function getAccount(){
-		// console.log("The response body: ",response.json())
-	}
-	getAccount()
-	const fetchAccountPromise = fetch("http://localhost:8080/allusers/"+accountId)
-	
-
 	let deleteInProgress
 	let modalOpen = false
 	let accountDeleted = false
-
+	
+	const fetchAccountPromise = fetch("http://localhost:8080/allusers/"+accountId)
 	
 	const openModal = () => {
 		modalOpen = true;
@@ -60,8 +54,12 @@
 					<div id="about">
 						{#each account[0] as acc}
 							<div id="profilePic"> <img src="/profile-picture.jpeg" alt="profile"> </div>
-							<div id="name">{acc.username}</div>
-							<div id="rating">Rating: {acc.rating}</div>
+							<div id="name">Username: {acc.username}</div>
+							{#if account[3][0].accRating == null}
+								<div id="rating">Rating: 0/5</div>
+							{:else}
+								<div id="rating">Rating: {account[3][0].accRating}/5</div>
+							{/if}
 						{/each}
 					</div>
 					<div id="other">
@@ -83,7 +81,8 @@
 							</h2>
 								{#each account[2] as review}
 									<div class="reviewItem">
-										{review.reviewDescription}
+										{review.reviewDescription} 
+										<div id="ratingInReview">{review.rating}/5</div>
 									</div>
 									{#if review.reviewerID == $user.accountID}
 										<Link to="/review/{review.reviewID}/update">
@@ -97,7 +96,7 @@
 						</div>
 					</div>
 				</div>
-				{#if $user.accountID == account[0].id}
+				{#if $user.accountID == account[0][0].id}
 					<button on:click={openModal} class="deleteBtn" id="deleteBtn">Delete this account</button>
 					<!-- Modal taken from  https://svelte.dev/repl/0299705b5e9e46be9e87fe4fef035bec?version=3.32.1-->
 					<Modal visible={modalOpen}>
@@ -221,11 +220,20 @@
 	}
 
 	.reviewItem{
+		display: flex;
+		flex-direction: row;
 		border: 2px solid black;
 		padding: 5px;
 		margin: 10px;
 		background-color: beige;
 		color: black;
+	}
+
+	#ratingInReview{
+		border: 2px solid black;
+		margin-left: 10px;
+		padding-left: 10px;
+		padding-right: 10px;
 	}
 
 	.listingItem{

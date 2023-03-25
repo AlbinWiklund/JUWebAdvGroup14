@@ -1,5 +1,4 @@
 <script>
-	import { Link } from "svelte-routing";
 	import { user } from "../user-store.js"
 
 	export let productId;
@@ -28,10 +27,11 @@
 				body: JSON.stringify(comment),
 			})
 
+			errorMessages = []
+
 			switch(response.status){
 				case 201:
 					reviewWasCreated = true
-					console.log("review was created:", reviewWasCreated)
 				break
 
 				case 400:

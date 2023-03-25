@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte";
 	import Card from "../lib/productCard.svelte"
 
 	let fetchSales = fetch("http://localhost:8080/books")
@@ -22,6 +21,7 @@
 
 </script>
 
+<h2>Books</h2>
 <div>
 	<form on:submit|preventDefault={getBookByCategory}>
 		<select name="category" bind:value={category}>

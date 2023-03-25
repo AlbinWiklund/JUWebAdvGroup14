@@ -16,7 +16,6 @@
 		switch (response.status){
 			case 200:
 				const account = await response.json()
-				console.log("this is the account", account)
 				username = account[0].username
 				name = account[0].name
 				surname = account[0].surname
@@ -48,10 +47,11 @@
 				body: JSON.stringify(account),
 			})
 
+			errorMessages = []
+
 			switch(response.status){
 				case 200:
 					accountWasUpdated = true
-					console.log("Account was updated")
 				break
 
 				case 400:
@@ -74,7 +74,6 @@
 	<label for="fName">First Name: <input type="text" bind:value={name}></label>
 	<label for="lName">Last Name: <input type="text" name="" id="" bind:value={surname}></label>
 	<label for="password">Password: <input type="password" bind:value={password}></label>
-	<label for="repassword">Re-enter password: <input type="password"></label>
 	<button type="submit">Update account</button>
 </form>
 {#if 0 < errorMessages.length}

@@ -1,7 +1,6 @@
 <script>
 	import { Router, Link, Route } from "svelte-routing";
 	import { user } from "./user-store.js"
-	// import { jwt_decode } from "jwt-decode"
 
 	import Home from "./routes/Home.svelte"
 	import About from "./routes/About.svelte"
