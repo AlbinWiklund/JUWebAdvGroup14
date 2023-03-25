@@ -1,12 +1,12 @@
 <script>
 	import { user } from "../user-store.js"
-
+	import jwt_decode from 'jwt-decode'
 
 	let username = ""
 	let password = ""
 
 	let errorMessages = []
-
+	
 	async function signin(){
 		const response = await fetch("http://localhost:8080/signin", {
 			method: "POST",
@@ -22,13 +22,19 @@
 
 		switch(response.status){
 			case 200:
+				const idToken = jwt_decode(body.id_token)
+				console.log(idToken)
 				const accessToken = body.access_token
-				const accountID = body.accountID
+				// @ts-ignore
+				const accountID = idToken.sub
+				// @ts-ignore
+				const username = idToken.username
 
 				$user = {
 					isLoggedIn: true,
 					accessToken,
 					accountID,
+					username,
 				}
 				break
 
@@ -43,7 +49,7 @@
 <h1>Sign in</h1>
 
 {#if $user.isLoggedIn}
-	<p>Welcome, {username}!</p>
+	<p>Welcome, {$user.username}!</p>
 {:else}
 	<form on:submit|preventDefault={signin} id="flex">
 		<label for="username">Username: <input type="text" bind:value={username}></label>

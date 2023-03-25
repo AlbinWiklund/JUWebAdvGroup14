@@ -650,32 +650,48 @@ app.post('/signin', async function(request, response){
 	} 
 	
 	const connection = await pool.getConnection()
+	console.log("-------------------___---------__---_--_-----1")
 	
 	try {
 		const query = 'SELECT * FROM accounts WHERE username = ?'
-
+		console.log("-------------------___---------__---_--_-----2")
 		const values = [username, password]
 
 		const signInAccount = await connection.query(query, values)
-		
+		console.log("-------------------___---------__---_--_-----3")
 		const passwordResult = await bcrypt.compare(password, signInAccount[0].password)
-
+		console.log("-------------------___---------__---_--_-----4")
 		if(signInAccount[0].username == username && passwordResult){
-			
-			const payload = {
+			console.log("-------------------___---------__---_--_-----5",signInAccount[0].username, "==", username, "&&",  passwordResult)
+			const accessTokenPayload = {
 				sub: signInAccount[0].id,
 				isLoggedIn: true,
 			}
-			console.log("---------------This is the payload: ", payload) //Console log
+			console.log("-------------------___---------__---_--_-----6")
+			console.log("-------------------___---------__---_--_-----7")
 			
-			jwt.sign(payload, ACCESS_TOKEN_SECRET, async function(error, accessToken){
+			jwt.sign(accessTokenPayload, ACCESS_TOKEN_SECRET, async function(error, accessToken){
 				if(error){
 					response.status(500).end()
 				} else {
-					response.status(200).json({
-						access_token: accessToken,
-						type: "bearer",
-						accountID: signInAccount[0].id
+					console.log
+					const idTokenPayload = {
+						iss: "http://localhost:8080",
+						sub: signInAccount[0].id,
+						aud: "Kunskapsmagazinet",
+						exp: Math.floor(Date.now() / 1000)+600,
+						username: signInAccount[0].username
+					}
+					jwt.sign(idTokenPayload, ACCESS_TOKEN_SECRET, async function(error, idToken){
+						if(error){
+							response.status(500).end()
+						} else {
+							response.status(200).json({
+								access_token: accessToken,
+								type: "bearer",
+								id_token: idToken,
+							})
+						}
 					})
 				}
 			})
