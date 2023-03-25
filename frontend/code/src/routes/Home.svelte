@@ -2,11 +2,9 @@
   import { onMount } from "svelte";
 	import Card from "../lib/productCard.svelte"
 
-	let fetchSales = fetch("http://localhost:8080/allbooks")
+	let fetchSales = fetch("http://localhost:8080/books")
 
 	let category = ""
-	let errorCodes = []
-	let salesGathered = false
 
 	async function getBookByCategory(){
 		const chosenCategory = {
@@ -49,6 +47,8 @@
 				{#each books as book (book.id)}
 					<Card bookName={book.name} productId={book.id} accountId={book.accountID}/>
 				{/each}
+			{:else}
+				<p>There are no products yet</p>
 			{/if}
 		{/await}
 		

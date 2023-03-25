@@ -99,12 +99,13 @@
 								</Modal>
 
 							{:else}
-								
-								<Link to="/book/{productId}/review">
-									<button>
-										Buy Book
-									</button>
-								</Link>
+								{#if $user.isLoggedIn}
+									<Link to="/book/{productId}/review">
+										<button>
+											Buy Book
+										</button>
+									</Link>
+								{/if}
 							{/if}
 						</div>
 					</div>
