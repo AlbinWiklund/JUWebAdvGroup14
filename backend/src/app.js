@@ -81,7 +81,7 @@ app.get('/allusers/:id', async function(request, response){
 				const avgAccRating = await connection.query(avgRatingQuery, values)
 
 				const accountInformation = [account, books, reviews, avgAccRating]
-				
+
 				response.status(200).json(accountInformation)
     } catch (error) {
         console.log(error)
@@ -368,21 +368,25 @@ app.post('/allbooks/:id/review', async function(request, response){
 	const connection = await pool.getConnection()
 
 	try {
-			const queryGetBookID = 'SELECT * FROM books WHERE id = ?'
+			const getBookIdQuery = 'SELECT * FROM books WHERE id = ?'
 
 			const bookValue = [request.params.id]
 
-			const book = await connection.query(queryGetBookID, bookValue)
+			const book = await connection.query(getBookIdQuery, bookValue)
 
 			const stringBookObject = JSON.stringify(book)
 
 			const parsedBookObject = JSON.parse(stringBookObject)
 
 			const query = 'INSERT INTO reviews(review, rating, accountID, reviewerID) VALUES (?, ?, ?, ?)'
-			console.log("---------------_____/////-------------------",review)
+
 			const values = [review.review, review.rating, parsedBookObject[0].accountID, review.reviewerId]
 			
 			const reviewResult = await connection.query(query, values)
+
+			const deleteQuery = 'DELETE FROM books WHERE id = ?'
+
+			await connection.query(deleteQuery, bookValue)
 
 			response.status(201).end()
     } catch (error) {
