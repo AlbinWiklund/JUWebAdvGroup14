@@ -5,17 +5,11 @@
 
 	export let accountId;
 
-	async function getAccount(){
-		// console.log("The response body: ",response.json())
-	}
-	getAccount()
-	const fetchAccountPromise = fetch("http://localhost:8080/allusers/"+accountId)
-	
-
 	let deleteInProgress
 	let modalOpen = false
 	let accountDeleted = false
-
+	
+	const fetchAccountPromise = fetch("http://localhost:8080/allusers/"+accountId)
 	
 	const openModal = () => {
 		modalOpen = true;

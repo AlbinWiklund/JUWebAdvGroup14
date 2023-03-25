@@ -58,6 +58,8 @@
 				body: JSON.stringify(book),
 			})
 
+			errorMessages = []
+
 			switch(response.status){
 				case 200:
 					bookWasUpdated = true

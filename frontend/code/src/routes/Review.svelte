@@ -28,6 +28,8 @@
 				body: JSON.stringify(comment),
 			})
 
+			errorMessages = []
+
 			switch(response.status){
 				case 201:
 					reviewWasCreated = true

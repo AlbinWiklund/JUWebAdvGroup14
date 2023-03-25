@@ -48,6 +48,8 @@
 				body: JSON.stringify(account),
 			})
 
+			errorMessages = []
+
 			switch(response.status){
 				case 200:
 					accountWasUpdated = true

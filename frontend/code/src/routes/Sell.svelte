@@ -30,6 +30,8 @@
 				body: JSON.stringify(sale)
 			})
 
+			errorMessages = []
+
 			switch(response.status){
 				case 201:
 					saleCreated = true

@@ -49,6 +49,8 @@
 				body: JSON.stringify(comment),
 			})
 
+			errorMessages = []
+
 			switch(response.status){
 				case 200:
 					reviewWasUpdated = true

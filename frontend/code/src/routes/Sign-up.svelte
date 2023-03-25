@@ -23,6 +23,8 @@
 				body: JSON.stringify(account),
 			})
 
+			errorMessages = []
+
 			switch(response.status){
 				case 201:
 					accountWasCreated = true
