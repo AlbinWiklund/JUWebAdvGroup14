@@ -15,7 +15,7 @@
 			{#if accounts}
 				{#each accounts as account (account.id)}
 					{#if $user.accountID != account.id}
-						<Card username={account.username} rating={account.rating} accountId={account.id}/>
+						<Card username={account.username} accountId={account.id}/>
 					{/if}
 				{/each}
 			{/if}

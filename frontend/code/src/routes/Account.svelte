@@ -54,7 +54,7 @@
 					<div id="about">
 						{#each account[0] as acc}
 							<div id="profilePic"> <img src="/profile-picture.jpeg" alt="profile"> </div>
-							<div id="name">{acc.username}</div>
+							<div id="name">Username: {acc.username}</div>
 							{#if account[3][0].accRating == null}
 								<div id="rating">Rating: 0/5</div>
 							{:else}
@@ -81,7 +81,8 @@
 							</h2>
 								{#each account[2] as review}
 									<div class="reviewItem">
-										{review.reviewDescription}
+										{review.reviewDescription} 
+										<div id="ratingInReview">{review.rating}/5</div>
 									</div>
 									{#if review.reviewerID == $user.accountID}
 										<Link to="/review/{review.reviewID}/update">
@@ -219,11 +220,20 @@
 	}
 
 	.reviewItem{
+		display: flex;
+		flex-direction: row;
 		border: 2px solid black;
 		padding: 5px;
 		margin: 10px;
 		background-color: beige;
 		color: black;
+	}
+
+	#ratingInReview{
+		border: 2px solid black;
+		margin-left: 10px;
+		padding-left: 10px;
+		padding-right: 10px;
 	}
 
 	.listingItem{

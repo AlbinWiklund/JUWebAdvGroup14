@@ -67,7 +67,7 @@ app.get('/allusers/:id', async function(request, response){
 
 				const booksQuery = `SELECT books.id as bookID, books.name AS bookTitle FROM books WHERE books.accountID = ?`
 
-				const reviewsQuery = `SELECT reviews.id AS reviewID, reviews.review AS reviewDescription, reviews.reviewerID as reviewerID 
+				const reviewsQuery = `SELECT reviews.id AS reviewID, reviews.review AS reviewDescription, reviews.reviewerID as reviewerID, reviews.rating 
 				FROM reviews WHERE reviews.accountID = ?`
         
 				const avgRatingQuery = `SELECT ROUND(AVG(reviews.rating), 1) as accRating FROM reviews WHERE reviews.accountID = ?`

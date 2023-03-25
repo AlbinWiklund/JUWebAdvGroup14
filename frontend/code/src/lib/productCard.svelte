@@ -1,9 +1,9 @@
 <script>
-  import { Link } from "svelte-routing";
+  import { Link } from "svelte-routing"
   
-  export let bookName;
-  export let productId;
-  export let accountId;
+  export let bookName
+  export let productId
+  export let accountId
 </script>
 
 <div class="card">
