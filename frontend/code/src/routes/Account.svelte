@@ -54,7 +54,7 @@
 				<div id="grid">
 					<div id="about">
 						{#each account as acc (account.id)}
-							<div id="profilePic"> Jo </div>
+							<div id="profilePic"> <img src="/profile-picture.jpeg" alt="profile"> </div>
 							<div id="name">{acc.username}</div>
 							<div id="rating">Rating: {acc.rating}</div>
 						{/each}
@@ -126,6 +126,18 @@
 {/if}
 
 <style>
+	img{
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		max-width: 350px;
+		min-width: 350px;
+		max-height: 350px;
+		min-height: 350px;
+		border-left: 2px solid black;
+		border-right: 2px solid black;
+	}
+
 	#deleteBtn{
 		margin-top: 10px;
 	}
@@ -144,7 +156,7 @@
 		grid-area: about;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		grid-template-rows: auto 30px;
+		grid-template-rows: 350px 50px;
 		grid-template-areas: 
 		"profilePic profilePic"
 		"name rating";
@@ -169,6 +181,7 @@
 		grid-area: name;
 		display: grid;
 		justify-content: center;
+		align-items: center;
 		border-top: 2px solid black;
 		border-right: 2px solid black;
 	}
@@ -177,6 +190,7 @@
 		grid-area: rating;
 		display: grid;
 		justify-content: center;
+		align-items: center;
 		border-top: 2px solid black;
 	}
 
