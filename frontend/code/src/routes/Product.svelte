@@ -1,5 +1,4 @@
 <script>
-	import { onMount } from "svelte"
 	import { Link } from "svelte-routing"
 	import { user } from "../user-store.js"
 	import Modal from "../lib/deleteModal.svelte"
@@ -52,7 +51,7 @@
 				{#each books as book (book.id)}
 					<div id="grid">
 						<div id="bookPicture">
-							{book.id}
+							<img src="https://www.pngkey.com/png/detail/350-3500680_placeholder-open-book-silhouette-vector.png" alt="book">
 						</div>
 						
 						<div class="flex" id="title">
@@ -99,12 +98,13 @@
 								</Modal>
 
 							{:else}
-								
-								<Link to="/book/{productId}/review">
-									<button>
-										Buy Book
-									</button>
-								</Link>
+								{#if $user.isLoggedIn}
+									<Link to="/book/{productId}/review">
+										<button>
+											Buy Book
+										</button>
+									</Link>
+								{/if}
 							{/if}
 						</div>
 					</div>
@@ -117,6 +117,16 @@
 {/if}
 
 <style>
+	img{
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		height: 200px;
+		border-top: 2px solid black;
+		border-left: 2px solid black;
+		border-right: 2px solid black;
+	}
+
 	#grid{
 		display: grid;
 		grid-template-columns: 2fr 1fr;
@@ -163,8 +173,6 @@
 		grid-area: buy;
 		margin: 10px;
 	}
-
-
 
 	.flex{
 		display: flex;

@@ -5,8 +5,13 @@
 
 	export let accountId;
 
+	async function getAccount(){
+		// console.log("The response body: ",response.json())
+	}
+	getAccount()
 	const fetchAccountPromise = fetch("http://localhost:8080/allusers/"+accountId)
 	
+
 	let deleteInProgress
 	let modalOpen = false
 	let accountDeleted = false
@@ -53,7 +58,7 @@
 			{#if account}
 				<div id="grid">
 					<div id="about">
-						{#each account as acc (account.id)}
+						{#each account[0] as acc}
 							<div id="profilePic"> <img src="/profile-picture.jpeg" alt="profile"> </div>
 							<div id="name">{acc.username}</div>
 							<div id="rating">Rating: {acc.rating}</div>
@@ -64,7 +69,7 @@
 							<h2>
 								Product Listing
 							</h2>
-								{#each account as book (account.bookID)}
+								{#each account[1] as book}
 									<Link to="/book/{book.bookID}">
 										<div class="listingItem">
 											{book.bookTitle}
@@ -76,12 +81,10 @@
 							<h2>
 								Reviews
 							</h2>
-								{#each account as review (account.reviewID)}
-									<Link to="/book/{review.bookId}">
-										<div class="reviewItem">
-											{review.reviewDescription}
-										</div>
-									</Link>
+								{#each account[2] as review}
+									<div class="reviewItem">
+										{review.reviewDescription}
+									</div>
 									{#if review.reviewerID == $user.accountID}
 										<Link to="/review/{review.reviewID}/update">
 											<button>Update</button>
@@ -222,6 +225,7 @@
 		padding: 5px;
 		margin: 10px;
 		background-color: beige;
+		color: black;
 	}
 
 	.listingItem{

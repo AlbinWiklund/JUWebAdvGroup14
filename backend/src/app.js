@@ -64,22 +64,30 @@ app.get('/allusers/:id', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
-        const query =  `SELECT accounts.id AS id, accounts.username AS username, books.id AS bookID, books.name AS bookTitle, reviews.id AS reviewID, reviews.review AS reviewDescription, reviews.reviewerID as reviewerID FROM accounts JOIN books ON accounts.id = books.accountID JOIN reviews ON accounts.id = reviews.accountID WHERE accounts.id = ?`
+        // const query =  `SELECT accounts.id AS id, accounts.username AS username, books.id AS bookID, books.name AS bookTitle, 
+				// reviews.id AS reviewID, reviews.review AS reviewDescription, reviews.reviewerID as reviewerID 
+				// FROM accounts 
+				// JOIN books ON accounts.id = books.accountID 
+				// JOIN reviews ON accounts.id = reviews.accountID 
+				// WHERE accounts.id = ?`
+
+				const accountQuery = `SELECT accounts.id AS id, accounts.username AS username FROM accounts WHERE accounts.id = ?`
+
+				const booksQuery = `SELECT books.id as bookID, books.name AS bookTitle FROM books WHERE books.accountID = ?`
+
+				const reviewsQuery = `SELECT reviews.id AS reviewID, reviews.review AS reviewDescription, reviews.reviewerID as reviewerID 
+				FROM reviews WHERE reviews.accountID = ?`
         
-        const value = [request.params.id]
+        const values = [request.params.id]
 				
-        const selectedAccount = await connection.query(query, value)
-				console.log("------------------------- " + selectedAccount)
-				console.log("------------------------- " + selectedAccount.length)
-				if (selectedAccount.length < 1) {
-					const accountOnlyQuery = 'SELECT accounts.id AS id, accounts.username AS username FROM accounts WHERE accounts.id = ?'
-					const selectedOnlyAccount = await connection.query(accountOnlyQuery, value)
-					console.log("this is the only accounts response: ", selectedAccount)
-					response.status(200).json(selectedOnlyAccount)
-				} else {
-					console.log("this is the accounts response: ", selectedAccount)
-					response.status(200).json(selectedAccount)
-				}
+        const account = await connection.query(accountQuery, values)
+        const books = await connection.query(booksQuery, values)
+        const reviews = await connection.query(reviewsQuery, values)
+        // const selectedAccount = await connection.query(query, values)
+
+				const accountInformation = [account, books, reviews]
+				console.log("this is the accounts response: ", accountInformation)
+				response.status(200).json(accountInformation)
     } catch (error) {
         console.log(error)
         response.status(500).json({error: "Internal server error."})
@@ -260,7 +268,7 @@ app.get('/account/:id', async function(request, response){
 		}
 })
 
-app.get('/allbooks', async function(request, response){
+app.get('/books', async function(request, response){
     const connection = await pool.getConnection()
 		console.log("all books")
     try {

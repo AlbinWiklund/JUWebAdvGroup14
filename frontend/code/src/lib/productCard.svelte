@@ -9,7 +9,9 @@
 </script>
 
 <div class="card">
-  <div id="cardPicture"><img src="https://www.pngkey.com/png/detail/350-3500680_placeholder-open-book-silhouette-vector.png" alt="book"></div>	
+  <div id="cardPicture">
+		<img src="https://www.pngkey.com/png/detail/350-3500680_placeholder-open-book-silhouette-vector.png" alt="book">
+	</div>	
   <div id="bookTitle" class="textInBoxes"> {bookName}</div>
   <div id="productLink" class="textInBoxes"> <Link to="/account/{accountId}"> Profile </Link></div>
   <div id="profileLink" class="textInBoxes"> <Link to="/book/{productId}"> Book </Link> </div>
