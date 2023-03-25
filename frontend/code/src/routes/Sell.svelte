@@ -1,5 +1,4 @@
 <script>
-	import { Link } from "svelte-routing";
 	import { user } from "../user-store.js"
 
 	let name = ""

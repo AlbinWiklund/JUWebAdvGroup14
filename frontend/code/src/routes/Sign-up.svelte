@@ -1,5 +1,4 @@
 <script>
-
 	let username = ""
 	let name = ""
 	let surname = ""
@@ -43,7 +42,7 @@
 
 </script>
 
-<h1>Sign up</h1>
+<h2>Sign up</h2>
 {#if accountWasCreated}
  <p>Account created!</p>
 {:else}

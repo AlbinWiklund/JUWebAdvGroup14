@@ -6,6 +6,7 @@
 
 </script>
 
+<h2>Accounts</h2>
 <div class="container">
 	{#await fetchAccountsPromise}
 		<p>Wait, I am loading...</p>

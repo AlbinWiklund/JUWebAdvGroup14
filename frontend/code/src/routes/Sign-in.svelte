@@ -45,7 +45,7 @@
 	}
 </script>
 
-<h1>Sign in</h1>
+<h2>Sign in</h2>
 
 {#if $user.isLoggedIn}
 	<p>Welcome, {$user.username}!</p>
