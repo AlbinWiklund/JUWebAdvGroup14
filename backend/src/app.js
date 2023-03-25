@@ -64,13 +64,6 @@ app.get('/allusers/:id', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
-        // const query =  `SELECT accounts.id AS id, accounts.username AS username, books.id AS bookID, books.name AS bookTitle, 
-				// reviews.id AS reviewID, reviews.review AS reviewDescription, reviews.reviewerID as reviewerID 
-				// FROM accounts 
-				// JOIN books ON accounts.id = books.accountID 
-				// JOIN reviews ON accounts.id = reviews.accountID 
-				// WHERE accounts.id = ?`
-
 				const accountQuery = `SELECT accounts.id AS id, accounts.username AS username FROM accounts WHERE accounts.id = ?`
 
 				const booksQuery = `SELECT books.id as bookID, books.name AS bookTitle FROM books WHERE books.accountID = ?`
@@ -78,15 +71,17 @@ app.get('/allusers/:id', async function(request, response){
 				const reviewsQuery = `SELECT reviews.id AS reviewID, reviews.review AS reviewDescription, reviews.reviewerID as reviewerID 
 				FROM reviews WHERE reviews.accountID = ?`
         
+				const avgRatingQuery = `SELECT ROUND(AVG(reviews.rating), 1) as accRating FROM reviews WHERE reviews.accountID = ?`
+
         const values = [request.params.id]
 				
         const account = await connection.query(accountQuery, values)
         const books = await connection.query(booksQuery, values)
         const reviews = await connection.query(reviewsQuery, values)
-        // const selectedAccount = await connection.query(query, values)
+				const avgAccRating = await connection.query(avgRatingQuery, values)
 
-				const accountInformation = [account, books, reviews]
-				console.log("this is the accounts response: ", accountInformation)
+				const accountInformation = [account, books, reviews, avgAccRating]
+				
 				response.status(200).json(accountInformation)
     } catch (error) {
         console.log(error)

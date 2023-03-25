@@ -61,7 +61,11 @@
 						{#each account[0] as acc}
 							<div id="profilePic"> <img src="/profile-picture.jpeg" alt="profile"> </div>
 							<div id="name">{acc.username}</div>
-							<div id="rating">Rating: {acc.rating}</div>
+							{#if account[3][0].accRating == null}
+								<div id="rating">Rating: 0/5</div>
+							{:else}
+								<div id="rating">Rating: {account[3][0].accRating}/5</div>
+							{/if}
 						{/each}
 					</div>
 					<div id="other">
