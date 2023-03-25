@@ -645,20 +645,22 @@ app.post('/signin', async function(request, response){
 	const password = request.body.password
 
 	if(grantType != "password"){
-		response.status(400).json({error: "unsupporter_grant_type"})
+		response.status(400).json(["unsupporter_grant_type"])
 		return
 	} 
 	
 	const connection = await pool.getConnection()
 	
 	try {
-		const query = 'SELECT * FROM accounts WHERE username = ? AND password = ?'
+		const query = 'SELECT * FROM accounts WHERE username = ?'
 
 		const values = [username, password]
 
 		const signInAccount = await connection.query(query, values)
 		
-		if(signInAccount[0].username == username && signInAccount[0].password == password){
+		const passwordResult = await bcrypt.compare(password, signInAccount[0].password)
+
+		if(signInAccount[0].username == username && passwordResult){
 			
 			const payload = {
 				sub: signInAccount[0].id,
@@ -678,10 +680,10 @@ app.post('/signin', async function(request, response){
 				}
 			})
 		} else {
-			response.status(400).json({error: "invalid_grant"})
+			response.status(400).json(["invalid_grant"])
 		}
 	} catch (error) {
-		response.status(400).json({error: "no_account"})
+		response.status(400).json(["No account matching username"])
 	} finally {
 		connection.release()
 	}

@@ -4,7 +4,6 @@
 
 	let username = ""
 	let password = ""
-	let signInWasSuccessful = false
 
 	let errorMessages = []
 
@@ -16,6 +15,8 @@
 			},
 			body: `grant_type=password&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
 		})
+
+		errorMessages = []
 
 		const body = await response.json()
 
@@ -32,7 +33,7 @@
 				break
 
 			case 400:
-				errorMessages = ["Wrong username or password"]
+				errorMessages = body
 				console.log(errorMessages)
 				break
 		}
@@ -41,7 +42,7 @@
 
 <h1>Sign in</h1>
 
-{#if signInWasSuccessful}
+{#if $user.isLoggedIn}
 	<p>Welcome, {username}!</p>
 {:else}
 	<form on:submit|preventDefault={signin} id="flex">
@@ -53,9 +54,9 @@
 	{#if 0 < errorMessages.length}
 		<p>Error messages:</p>
 		<ul>
-			<li>
-				{errorMessages[0]}
-			</li>
+			{#each errorMessages as errorMessage}
+				<li>{errorMessage}</li>
+			{/each}
 		</ul>
 	{/if}
 {/if}
