@@ -6,17 +6,7 @@
 	let category = ""
 
 	async function getBookByCategory(){
-		const chosenCategory = {
-			category: category,
-		}
-
-		fetchSales = fetch("http://localhost:8080/books/bycategory",{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(chosenCategory)
-		})
+		fetchSales = fetch("http://localhost:8080/books/bycategory?category="+category)
 	}
 
 </script>
