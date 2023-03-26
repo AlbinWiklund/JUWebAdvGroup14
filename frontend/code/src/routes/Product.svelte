@@ -5,7 +5,7 @@
 
 	export let productId;
 	
-	const fetchProductPromise = fetch("http://localhost:8080/allbooks/"+productId)
+	const fetchProductPromise = fetch("http://localhost:8080/books/"+productId)
 
 	let deleteInProgress
 	let modalOpen = false
@@ -22,7 +22,7 @@
 	}
 	
 	async function deleteBook () {
-		const response = await fetch("http://localhost:8080/allusers/"+productId+"/delete", {
+		const response = await fetch("http://localhost:8080/book/"+productId+"/delete", {
 				method: "DELETE",
 				headers: {
 					"Authorization": "Bearer "+$user.accessToken

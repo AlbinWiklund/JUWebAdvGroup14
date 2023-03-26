@@ -10,7 +10,7 @@
 			category: category,
 		}
 
-		fetchSales = fetch("http://localhost:8080/allbooks/bycategory",{
+		fetchSales = fetch("http://localhost:8080/books/bycategory",{
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"

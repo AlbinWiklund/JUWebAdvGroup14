@@ -19,7 +19,6 @@
 				username = account[0].username
 				name = account[0].name
 				surname = account[0].surname
-				password = account[0].password
 				break
 			case 500:
 				errorMessages = await response.json()

@@ -43,7 +43,7 @@ app.use(function(request, response, next){
 	next()
 })
 
-app.get('/allusers', async function(request, response){
+app.get('/accounts', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
@@ -59,7 +59,7 @@ app.get('/allusers', async function(request, response){
     }
 })
 
-app.get('/allusers/:id', async function(request, response){
+app.get('/accounts/:id', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
@@ -213,7 +213,7 @@ app.put('/book/:id/update', async function(request, response){
 	})
 })
 
-app.delete('/allusers/:id/delete', async function(request, response){
+app.delete('/account/:id/delete', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 	
@@ -275,7 +275,7 @@ app.get('/books', async function(request, response){
     }
 })
 
-app.get('/allbooks/:id', async function(request, response){
+app.get('/books/:id', async function(request, response){
     const connection = await pool.getConnection()
     try {
         const query = 'SELECT * FROM books WHERE id = ?'
@@ -292,7 +292,7 @@ app.get('/allbooks/:id', async function(request, response){
     }
 })
 
-app.delete('/allbooks/:id/delete', async function(request, response){
+app.delete('/book/:id/delete', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 	
@@ -320,7 +320,7 @@ app.delete('/allbooks/:id/delete', async function(request, response){
 	})
 })
 
-app.post('/allbooks/:id/review', async function(request, response){
+app.post('/book/:id/review', async function(request, response){
 
 	const review = request.body
 
@@ -467,7 +467,7 @@ app.delete('/review/:id/delete', async function(request, response){
 	})
 })
 
-app.post('/sellbook', async function(request, response){
+app.post('/book/sell', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 
@@ -658,7 +658,7 @@ app.post('/signin', async function(request, response){
 	}
 })
 
-app.post('/allbooks/bycategory', async function(request, response){
+app.post('/books/bycategory', async function(request, response){
 	const connection = await pool.getConnection()
 	try {
 		let books = []

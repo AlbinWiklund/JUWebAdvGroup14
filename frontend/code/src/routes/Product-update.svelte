@@ -14,7 +14,7 @@
 
 	async function getBook(){
 
-		const response = await fetch("http://localhost:8080/allbooks/"+productId)
+		const response = await fetch("http://localhost:8080/books/"+productId)
 
 		switch(response.status){
 			case 200:
