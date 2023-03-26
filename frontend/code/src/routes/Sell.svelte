@@ -19,7 +19,7 @@
 		}
 
 		try {
-			const response = await fetch("http://localhost:8080/sellbook", {
+			const response = await fetch("http://localhost:8080/book/sell", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -50,7 +50,7 @@
 </script>
 
 {#if saleCreated}
-	<p>Sale created!</p>
+	<p>Book listed!</p>
 {:else}
 	<form on:submit|preventDefault={createSale} class="flex">
 		<div class="settings">

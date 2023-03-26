@@ -2,7 +2,7 @@
 	import Card from "../lib/accountCard.svelte"
 	import { user } from "../user-store.js"
 
-	const fetchAccountsPromise = fetch("http://localhost:8080/allusers")
+	const fetchAccountsPromise = fetch("http://localhost:8080/accounts")
 
 </script>
 

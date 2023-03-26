@@ -18,7 +18,7 @@
 		}
 
 		try {
-			const response = await fetch("http://localhost:8080/allbooks/"+productId+"/review", {
+			const response = await fetch("http://localhost:8080/book/"+productId+"/review", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

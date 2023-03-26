@@ -9,7 +9,7 @@
 	let modalOpen = false
 	let accountDeleted = false
 	
-	const fetchAccountPromise = fetch("http://localhost:8080/allusers/"+accountId)
+	const fetchAccountPromise = fetch("http://localhost:8080/accounts/"+accountId)
 	
 	const openModal = () => {
 		modalOpen = true;
@@ -21,7 +21,7 @@
 	}
 	
 	async function deleteAccount () {
-		const response = await fetch("http://localhost:8080/allusers/"+$user.accountID+"/delete", {
+		const response = await fetch("http://localhost:8080/account/"+$user.accountID+"/delete", {
 				method: "DELETE",
 				headers: {
 					"Authorization": "Bearer "+$user.accessToken
@@ -35,8 +35,13 @@
 				$user.accessToken = ""
 				$user.accountID = 0
 				break
+
+			case 401:
+				alert("Unauthorized")
+				break
+			
 			case 500:
-				alert("Account failed to delete")
+				alert("Server error, account failed to delete")
 				break
 		}
 	}

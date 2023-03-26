@@ -18,8 +18,12 @@
 				reviewWasDeleted = true
 				break
 
+			case 401:
+				alert("Unauthorized")
+				break
+
 			case 500:
-				alert("Review failed to delete")
+				alert("Server error, review failed to delete")
 				break
 		}
 	}
