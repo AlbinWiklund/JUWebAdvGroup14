@@ -35,8 +35,13 @@
 				$user.accessToken = ""
 				$user.accountID = 0
 				break
+
+			case 401:
+				alert("Unauthorized")
+				break
+			
 			case 500:
-				alert("Account failed to delete")
+				alert("Server error, account failed to delete")
 				break
 		}
 	}

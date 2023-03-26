@@ -57,6 +57,10 @@
 				case 400:
 					errorMessages = await response.json()
 				break
+
+				case 400:
+					errorMessages = ["Unauthorized"]
+				break
 			}
 		} catch (error) {
 			errorMessages.push("COMMUNICATION_ERROR")

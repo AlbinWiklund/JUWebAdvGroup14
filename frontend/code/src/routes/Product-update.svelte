@@ -24,15 +24,15 @@
 				category = book[0].category
 				description = book[0].description
 				accountId = book[0].accountID
-			break;
+				break
 				
 			case 400:
 				errorMessages = await response.json()
-			break;
+				break
 
 			case 500:
 				errorMessages = await response.json()
-			break;
+				break
 		}
 
 	}
@@ -63,11 +63,15 @@
 			switch(response.status){
 				case 200:
 					bookWasUpdated = true
-				break
+					break
 
 				case 400:
 					errorMessages = await response.json()
-				break
+					break
+
+				case 401:
+					errorMessages = ["Unauthorized"]
+					break
 			}
 
 		} catch (error) {

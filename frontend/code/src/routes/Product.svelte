@@ -33,8 +33,11 @@
 			case 200:
 				bookDeleted = true
 				break
-			case 400:
-				alert("Book failed to delete")
+			case 401:
+				alert("Unauthorized")
+				break
+			case 500:
+				alert("Server error, can not delete book at this moment")
 				break
 		}
 	}

@@ -618,7 +618,7 @@ app.delete('/account/:id/delete', async function(request, response){
 
 				response.status(200).json({accountDeleted: "true"})
 			} catch(error) {
-				response.status(400).json({error: "deleteFailed"})
+				response.status(500).json({error: "deleteFailed"})
 			} finally {
 				connection.release()
 			}
