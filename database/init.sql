@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS accounts(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50),
+    username VARCHAR(50) UNIQUE,
     password VARCHAR(50),
     name VARCHAR(50),
     surname VARCHAR(50)
