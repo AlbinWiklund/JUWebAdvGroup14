@@ -1,15 +1,15 @@
 <script>
-  import { Link } from "svelte-routing";
+  import { Link } from "svelte-routing"
   
-  export let bookName;
-  export let productId;
-  export let accountId;
-
-  
+  export let bookName
+  export let productId
+  export let accountId
 </script>
 
 <div class="card">
-  <div id="cardPicture"></div>	
+  <div id="cardPicture">
+		<img src="https://www.pngkey.com/png/detail/350-3500680_placeholder-open-book-silhouette-vector.png" alt="book">
+	</div>	
   <div id="bookTitle" class="textInBoxes"> {bookName}</div>
   <div id="productLink" class="textInBoxes"> <Link to="/account/{accountId}"> Profile </Link></div>
   <div id="profileLink" class="textInBoxes"> <Link to="/book/{productId}"> Book </Link> </div>
@@ -17,6 +17,11 @@
 
 
 <style>
+	img{
+		width: 200px;
+		height: 130px;
+	}
+
   .card{
 		width: 200px;
 		height: 350px;
@@ -44,6 +49,9 @@
 
 	#cardPicture{
 		grid-area: pic;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	#bookTitle{

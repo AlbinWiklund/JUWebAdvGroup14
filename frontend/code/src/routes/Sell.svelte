@@ -1,13 +1,13 @@
 <script>
-	import { Link } from "svelte-routing";
+	import { user } from "../user-store.js"
 
 	let name = ""
 	let price = 0
 	let category = ""
 	let description = ""
 	let saleCreated = false
-	let accountID = 1
-	let errorCodes = []
+	let accountID = $user.accountID
+	let errorMessages = []
 
 	async function createSale(){
 		const sale = {
@@ -17,38 +17,40 @@
 			description,
 			accountID,
 		}
-		console.log(name)
+
 		try {
-			console.log(price)
-			const response = await fetch("http://localhost:8080/sellbook", {
+			const response = await fetch("http://localhost:8080/book/sell", {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
+					"Authorization": "Bearer "+$user.accessToken
 				},
 				body: JSON.stringify(sale)
 			})
 
+			errorMessages = []
+
 			switch(response.status){
 				case 201:
 					saleCreated = true
-				break
+					break
 
 				case 400:
-					errorCodes = await response.json()
-				break
+					errorMessages = await response.json()
+					break
 			}
 
 
 		} catch (error) {
-			errorCodes.push("COMMUNICATION_ERROR")
-			errorCodes = errorCodes
+			errorMessages.push("COMMUNICATION_ERROR")
+			errorMessages = errorMessages
 		}
 	}
 
 </script>
 
 {#if saleCreated}
-	<p>Sale created!</p>
+	<p>Book listed!</p>
 {:else}
 	<form on:submit|preventDefault={createSale} class="flex">
 		<div class="settings">
@@ -70,10 +72,18 @@
 			<!--<input type="text" name="category" bind:value={category}>-->
 			<label for="description">Description</label>
 			<textarea name="description" id="" cols="20" rows="10" bind:value={description}></textarea>
-			<input type="text" bind:value={accountID}>
+			<input type="hidden" bind:value={accountID}>
 			<button type="submit" id="submit"> Register book </button>
 		</div>
 	</form>
+	{#if 0 < errorMessages.length}
+		<p>We have errors!</p>
+		<ul>
+			{#each errorMessages as errorMessage}
+				<li>{errorMessage}</li>
+			{/each}
+		</ul>
+	{/if}
 {/if}
 
 <style>

@@ -1,81 +1,135 @@
 <script>
-	import { onMount } from "svelte";
-	import { Link } from "svelte-routing";
+	import { Link } from "svelte-routing"
+	import { user } from "../user-store.js"
+	import Modal from "../lib/deleteModal.svelte"
 
 	export let productId;
 	
-	const fetchProductPromise = fetch("http://localhost:8080/allbooks/"+productId)
+	const fetchProductPromise = fetch("http://localhost:8080/books/"+productId)
+
+	let deleteInProgress
+	let modalOpen = false
+	let bookDeleted = false
 
 	
-
-	/*let book;
-
-	async function getData(){
-		const response = await fetch('../../dummyDataProduct.json');
-		const data = await response.json();
-		
-		getProductFromData(data);
+	const openModal = () => {
+		modalOpen = true;
 	}
-
-	async function getProductFromData(proData){
-		for (const element of proData){
-			if (element.id == productId) {
-				book = element;
-			}
+	
+	const closeModal = () => {
+		modalOpen = false
+		deleteInProgress = null
+	}
+	
+	async function deleteBook () {
+		const response = await fetch("http://localhost:8080/book/"+productId+"/delete", {
+				method: "DELETE",
+				headers: {
+					"Authorization": "Bearer "+$user.accessToken
+				}
+			})
+		
+		switch(response.status){
+			case 200:
+				bookDeleted = true
+				break
+			case 401:
+				alert("Unauthorized")
+				break
+			case 500:
+				alert("Server error, can not delete book at this moment")
+				break
 		}
 	}
-
-	onMount(getData);*/
 </script>
 
+{#if bookDeleted}
+	<p>Book has been deleted</p>
+{:else}
+	{#await fetchProductPromise}
+		<p>Wait, I am loading...</p>
+	{:then response}
+		{#await response.json() then books}
+			{#if books}
+				{#each books as book (book.id)}
+					<div id="grid">
+						<div id="bookPicture">
+							<img src="https://www.pngkey.com/png/detail/350-3500680_placeholder-open-book-silhouette-vector.png" alt="book">
+						</div>
+						
+						<div class="flex" id="title">
+							<h2>
+								{book.name}
+							</h2>
+						</div>
+						
+						<div class="flex" id="price">
+							{book.price} SEK
+						</div>
+						
+						<div class="flex" id="category">
+							{book.category}
+						</div>
 
-{#await fetchProductPromise}
-	<p>Wait, I am loading...</p>
-{:then response}
-<div>
-	Tjena
-</div>
-	{#await response.json() then books}
-		{#if books}
-			{#each books as book (book.id)}
-				<div id="grid">
-					<div id="bookPicture">
-						{book.id}
-					</div>
-					
-					<div class="flex" id="title">
-						<h2>
-							{book.name}
-						</h2>
-					</div>
-					
-					<div class="flex" id="price">
-						{book.price} SEK
-					</div>
-					
-					<div class="flex" id="category">
-						{book.category}
-					</div>
+						<div class="flex" id="description">
+							{book.description}
+						</div>
+						<div id="btn">
+							{#if book.accountID == $user.accountID}
+								<button on:click={openModal} class="deleteBtn">
+									Delete book
+								</button>
+								<Link to="/book/{productId}/update">
+									<button>
+										Update Book
+									</button>
+								</Link>
+								<Modal visible={modalOpen}>
+									{#if deleteInProgress}
+										{#await deleteInProgress then result}
+											<p>Thing deleted ({JSON.stringify(result)}).</p>
+											<button on:click={closeModal}>ok</button>
+										{:catch err}
+											<p>Could not delete the thing.</p>
+											<button on:click={closeModal}>ok</button>
+										{/await}
+									{:else}
+										<p>Are you sure you want to delete this book?</p>
+										<button on:click={deleteBook}>yes</button>
+										<button on:click={closeModal}>no</button>
+									{/if}
+								</Modal>
 
-					<div class="flex" id="description">
-						{book.description}
+							{:else}
+								{#if $user.isLoggedIn}
+									<Link to="/book/{productId}/review">
+										<button>
+											Buy Book
+										</button>
+									</Link>
+								{/if}
+							{/if}
+						</div>
 					</div>
-					<div id="buy">
-						<Link to="/book/{productId}/review">
-							<button>
-								Buy Book
-							</button>
-						</Link>
-					</div>
-				</div>
-			{/each}
-		{/if}
+				{/each}
+			{/if}
+		{/await}
+		{:catch error}
+			<p>Something went wrong, try again later.</p>
 	{/await}
-	{:catch error}
-		<p>Something went wrong, try again later.</p>
-{/await}
+{/if}
 
 <style>
+	img{
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		height: 200px;
+		border-top: 2px solid black;
+		border-left: 2px solid black;
+		border-right: 2px solid black;
+	}
+
 	#grid{
 		display: grid;
 		grid-template-columns: 2fr 1fr;
@@ -118,7 +172,7 @@
 		border-bottom: 2px solid black;
 	}
 
-	#buy{
+	#btn{
 		grid-area: buy;
 		margin: 10px;
 	}

@@ -1,49 +1,17 @@
 <script>
-  import { onMount } from "svelte";
 	import Card from "../lib/productCard.svelte"
 
-	let fetchSales = fetch("http://localhost:8080/allbooks")
+	let fetchSales = fetch("http://localhost:8080/books")
 
 	let category = ""
-	let errorCodes = []
-	let salesGathered = false
 
 	async function getBookByCategory(){
-		const chosenCategory = {
-			category: category,
-		}
-
-		fetchSales = fetch("http://localhost:8080/allbooks/bycategory",{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(chosenCategory)
-		})
-
-		/*try {
-
-			
-
-			switch(fetchSales.status){
-				case 201:
-					salesGathered = true
-				break
-
-				case 400:
-					errorCodes = await fetchSales.json()
-				break
-			}
-
-		} catch (error) {
-			errorCodes.push("COMMUNICATION_ERROR")
-			errorCodes = errorCodes
-		}*/
-
+		fetchSales = fetch("http://localhost:8080/books/bycategory?category="+category)
 	}
 
 </script>
 
+<h2>Books</h2>
 <div>
 	<form on:submit|preventDefault={getBookByCategory}>
 		<select name="category" bind:value={category}>
@@ -67,8 +35,10 @@
 		{#await response.json() then books}
 			{#if books}
 				{#each books as book (book.id)}
-					<Card bookName={book.name} productId={book.id} accountId={book.accountId}/>
+					<Card bookName={book.name} productId={book.id} accountId={book.accountID}/>
 				{/each}
+			{:else}
+				<p>There are no products yet</p>
 			{/if}
 		{/await}
 		

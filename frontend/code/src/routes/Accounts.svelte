@@ -1,10 +1,12 @@
 <script>
 	import Card from "../lib/accountCard.svelte"
+	import { user } from "../user-store.js"
 
-	const fetchAccountsPromise = fetch("http://localhost:8080/allusers")
+	const fetchAccountsPromise = fetch("http://localhost:8080/accounts")
 
 </script>
 
+<h2>Accounts</h2>
 <div class="container">
 	{#await fetchAccountsPromise}
 		<p>Wait, I am loading...</p>
@@ -12,7 +14,9 @@
 		{#await response.json() then accounts}
 			{#if accounts}
 				{#each accounts as account (account.id)}
-					<Card username={account.username} rating={account.rating} accountId={account.id}/>
+					{#if $user.accountID != account.id}
+						<Card username={account.username} accountId={account.id}/>
+					{/if}
 				{/each}
 			{/if}
 		{/await}
