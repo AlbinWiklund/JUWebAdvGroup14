@@ -35,7 +35,7 @@
 			{#if $user.isLoggedIn == false}
 				<li><button id="sign-in"><Link to="/signin">Sign In</Link></button></li>
 				<li><button id="sign-up"><Link to="/signup">Sign Up</Link></button></li>
-			{:else if $user.isLoggedIn == true}
+			{:else}
 				<li><Link to="/sell">Sell</Link></li>
 				<li><Link to="/account/{$user.accountID}">Profile</Link></li>
 				<li><button id="sign-up" on:click={signOut}><Link to="/">Sign out</Link></button></li>

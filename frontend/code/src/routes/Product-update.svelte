@@ -19,11 +19,11 @@
 		switch(response.status){
 			case 200:
 				const book = await response.json()
-				name = book[0].name
-				price = book[0].price
-				category = book[0].category
-				description = book[0].description
-				accountId = book[0].accountID
+				name = book.name
+				price = book.price
+				category = book.category
+				description = book.description
+				accountId = book.accountID
 				break
 				
 			case 400:

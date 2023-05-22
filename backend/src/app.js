@@ -18,15 +18,15 @@ const MAX_REVIEW_LENGTH = 150
 const MIN_REVIEW_LENGTH = 1
 
 const pool = createPool({
-    host:'database',
-    port: 3306,
-    user: 'root',
-    password: 'abc123',
-    database: 'abc',
+	host:'database',
+	port: 3306,
+	user: 'root',
+	password: 'abc123',
+	database: 'abc',
 })
 
 pool.on('error', function(error){
-    console.log('Error from pool', error)
+  console.log('Error from pool', error)
 })
 
 const app = express()
@@ -44,67 +44,67 @@ app.use(function(request, response, next){
 })
 
 app.get('/accounts', async function(request, response){
-    const connection = await pool.getConnection()
+	const connection = await pool.getConnection()
 
-    try {
-        const query = 'SELECT * FROM accounts ORDER BY name'
+	try {
+		const query = 'SELECT * FROM accounts ORDER BY name'
 
-        const accounts = await connection.query(query)
+		const accounts = await connection.query(query)
 
-        response.status(200).json(accounts)
-    } catch(error) {
-        response.status(500).json({error: "Internal server error."})
-    } finally {
-        connection.release()
-    }
+		response.status(200).json(accounts)
+	} catch(error) {
+		response.status(500).json({error: "Internal server error."})
+	} finally {
+		connection.release()
+	}
 })
 
 app.get('/accounts/:id', async function(request, response){
-    const connection = await pool.getConnection()
+	const connection = await pool.getConnection()
 
-    try {
-				const accountQuery = `SELECT accounts.id AS id, accounts.username AS username FROM accounts WHERE accounts.id = ?`
+	try {
+		const accountQuery = `SELECT accounts.id AS id, accounts.username AS username FROM accounts WHERE accounts.id = ?`
 
-				const booksQuery = `SELECT books.id as bookID, books.name AS bookTitle FROM books WHERE books.accountID = ?`
+		const booksQuery = `SELECT books.id as bookID, books.name AS bookTitle FROM books WHERE books.accountID = ?`
 
-				const reviewsQuery = `SELECT reviews.id AS reviewID, reviews.review AS reviewDescription, reviews.reviewerID as reviewerID, reviews.rating 
-				FROM reviews WHERE reviews.accountID = ?`
-        
-				const avgRatingQuery = `SELECT ROUND(AVG(reviews.rating), 1) as accRating FROM reviews WHERE reviews.accountID = ?`
+		const reviewsQuery = `SELECT reviews.id AS reviewID, reviews.review AS reviewDescription, reviews.reviewerID as reviewerID, reviews.rating 
+		FROM reviews WHERE reviews.accountID = ?`
+			
+		const avgRatingQuery = `SELECT ROUND(AVG(reviews.rating), 1) as accRating FROM reviews WHERE reviews.accountID = ?`
 
-        const values = [request.params.id]
-				
-        const account = await connection.query(accountQuery, values)
-        const books = await connection.query(booksQuery, values)
-        const reviews = await connection.query(reviewsQuery, values)
-				const avgAccRating = await connection.query(avgRatingQuery, values)
+		const values = [request.params.id]
+			
+		const account = await connection.query(accountQuery, values)
+		const books = await connection.query(booksQuery, values)
+		const reviews = await connection.query(reviewsQuery, values)
+		const avgAccRating = await connection.query(avgRatingQuery, values)
 
-				const accountInformation = [account, books, reviews, avgAccRating]
+		const accountInformation = [account, books, reviews, avgAccRating]
 
-				response.status(200).json(accountInformation)
-    } catch (error) {
-        response.status(500).json({error: "Internal server error."})
-    } finally {
-        connection.release()
-    }
+		response.status(200).json(accountInformation)
+	} catch (error) {
+		response.status(500).json({error: "Internal server error."})
+	} finally {
+		connection.release()
+	}
 })
 
 app.get('/account/:id', async function(request, response){
 	const connection = await pool.getConnection()
 
-    try {
-			const query = "SELECT * FROM accounts WHERE id = ?"
+	try {
+		const query = "SELECT * FROM accounts WHERE id = ?"
 
-			const values = [request.params.id]
+		const values = [request.params.id]
 
-			const account = await connection.query(query, values)
+		const account = await connection.query(query, values)
 
-			response.status(200).json(account)
-		} catch(error) {
-			response.status(500).json({error: "Could not recieve account"})
-		} finally {
-			connection.release()
-		}
+		response.status(200).json(account)
+	} catch(error) {
+		response.status(500).json({error: "Could not recieve account"})
+	} finally {
+		connection.release()
+	}
 })
 
 app.get('/books/bycategory', async function(request, response){
@@ -132,53 +132,53 @@ app.get('/books/bycategory', async function(request, response){
 })
 
 app.get('/books', async function(request, response){
-    const connection = await pool.getConnection()
+	const connection = await pool.getConnection()
 
-    try {
-        const query = 'SELECT * FROM books ORDER BY name'
+	try {
+		const query = 'SELECT * FROM books ORDER BY name'
 
-        const books = await connection.query(query)
+		const books = await connection.query(query)
 
-        response.status(200).json(books)
-    } catch(error) {
-        response.status(500).json({error: "Internal server error"})
-    } finally {
-        connection.release()
-    }
+		response.status(200).json(books)
+	} catch(error) {
+		response.status(500).json({error: "Internal server error"})
+	} finally {
+		connection.release()
+	}
 })
 
 app.get('/books/:id', async function(request, response){
-    const connection = await pool.getConnection()
-    try {
-        const query = 'SELECT * FROM books WHERE id = ?'
+	const connection = await pool.getConnection()
+	try {
+		const query = 'SELECT * FROM books WHERE id = ?'
 
-        const value = [request.params.id]
+		const value = [request.params.id]
 
-        const selectedBook = await connection.query(query, value)
+		const selectedBook = await connection.query(query, value)
 
-        response.status(200).json(selectedBook)
-    } catch (error) {
-        response.status(500).json({error: "Internal server error."})
-    } finally {
-        connection.release()
-    }
+		response.status(200).json(selectedBook)
+	} catch (error) {
+		response.status(500).json({error: "Internal server error."})
+	} finally {
+		connection.release()
+	}
 })
 
 app.get('/review/:id', async function(request, response){
 	const connection = await pool.getConnection()
 
-    try {
-        const query = 'SELECT * FROM reviews WHERE id = ?'
+	try {
+		const query = 'SELECT * FROM reviews WHERE id = ?'
 
-        const value = [request.params.id]
+		const value = [request.params.id]
 
-        const selectedReview = await connection.query(query, value)
-        response.status(200).json(selectedReview)
-    } catch (error) {
-        response.status(500).json({error: "Internal server error."})
-    } finally {
-        connection.release()
-    }
+		const selectedReview = await connection.query(query, value)
+		response.status(200).json(selectedReview)
+	} catch (error) {
+		response.status(500).json({error: "Internal server error."})
+	} finally {
+		connection.release()
+	}
 })
 
 app.post('/signup', async function(request, response){
@@ -266,7 +266,7 @@ app.post('/signin', async function(request, response){
 	try {
 		const query = 'SELECT * FROM accounts WHERE username = ?'
 
-		const values = [username, password]
+		const values = [username]
 
 		const signInAccount = await connection.query(query, values)
 
@@ -398,32 +398,32 @@ app.post('/book/:id/review', async function(request, response){
 	const connection = await pool.getConnection()
 
 	try {
-			const getBookIdQuery = 'SELECT * FROM books WHERE id = ?'
+		const getBookIdQuery = 'SELECT * FROM books WHERE id = ?'
 
-			const bookValue = [request.params.id]
+		const bookValue = [request.params.id]
 
-			const book = await connection.query(getBookIdQuery, bookValue)
+		const book = await connection.query(getBookIdQuery, bookValue)
 
-			const stringBookObject = JSON.stringify(book)
+		const stringBookObject = JSON.stringify(book)
 
-			const parsedBookObject = JSON.parse(stringBookObject)
+		const parsedBookObject = JSON.parse(stringBookObject)
 
-			const query = 'INSERT INTO reviews(review, rating, accountID, reviewerID) VALUES (?, ?, ?, ?)'
+		const query = 'INSERT INTO reviews(review, rating, accountID, reviewerID) VALUES (?, ?, ?, ?)'
 
-			const values = [review.review, review.rating, parsedBookObject[0].accountID, review.reviewerId]
-			
-			const reviewResult = await connection.query(query, values)
+		const values = [review.review, review.rating, parsedBookObject[0].accountID, review.reviewerId]
+		
+		const reviewResult = await connection.query(query, values)
 
-			const deleteQuery = 'DELETE FROM books WHERE id = ?'
+		const deleteQuery = 'DELETE FROM books WHERE id = ?'
 
-			await connection.query(deleteQuery, bookValue)
+		await connection.query(deleteQuery, bookValue)
 
-			response.status(201).end()
-    } catch (error) {
-        response.status(500).json({error: "Internal server error."})
-    } finally {
-        connection.release()
-    }
+		response.status(201).end()
+	} catch (error) {
+		response.status(500).json({error: "Internal server error."})
+	} finally {
+		connection.release()
+	}
 })
 
 app.put('/account/:id/update', async function(request, response){
