@@ -37,7 +37,7 @@
 			password,
 		}
 		try {
-			const response = await fetch("http://localhost:8080/account/"+accountId+"/update", {
+			const response = await fetch("http://localhost:8080/account/"+accountId, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",

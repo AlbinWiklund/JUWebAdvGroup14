@@ -49,7 +49,7 @@
 		}
 
 		try {
-			const response = await fetch("http://localhost:8080/book/"+productId+"/update",{
+			const response = await fetch("http://localhost:8080/book/"+productId,{
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",

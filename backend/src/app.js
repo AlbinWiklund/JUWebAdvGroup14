@@ -59,7 +59,7 @@ app.get('/accounts', async function(request, response){
     }
 })
 
-app.get('/accounts/:id', async function(request, response){
+app.get('/account/:id/books/reviews', async function(request, response){
     const connection = await pool.getConnection()
 
     try {
@@ -181,7 +181,7 @@ app.get('/review/:id', async function(request, response){
     }
 })
 
-app.post('/signup', async function(request, response){
+app.post('/account/create', async function(request, response){
 	const account = request.body
 	const errorMessages = []
 
@@ -251,7 +251,7 @@ app.post('/signup', async function(request, response){
   })
 })
 
-app.post('/signin', async function(request, response){
+app.post('/tokens', async function(request, response){
 	const grantType = request.body.grant_type
 	const username = request.body.username
 	const password = request.body.password
@@ -312,7 +312,7 @@ app.post('/signin', async function(request, response){
 	}
 })
 
-app.post('/book/sell', async function(request, response){
+app.post('/book/create', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 
@@ -426,7 +426,7 @@ app.post('/book/:id/review', async function(request, response){
     }
 })
 
-app.put('/account/:id/update', async function(request, response){
+app.put('/account/:id', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 	const account = request.body
@@ -493,7 +493,7 @@ app.put('/account/:id/update', async function(request, response){
 	})
 })
 
-app.put('/book/:id/update', async function(request, response){
+app.put('/book/:id', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 	const book = request.body
@@ -550,7 +550,7 @@ app.put('/book/:id/update', async function(request, response){
 	})
 })
 
-app.put('/review/:id/update', async function(request, response){
+app.put('/review/:id', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 	
@@ -598,7 +598,7 @@ app.put('/review/:id/update', async function(request, response){
 	})
 })
 
-app.delete('/account/:id/delete', async function(request, response){
+app.delete('/account/:id', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 	
@@ -628,7 +628,7 @@ app.delete('/account/:id/delete', async function(request, response){
 
 
 
-app.delete('/book/:id/delete', async function(request, response){
+app.delete('/book/:id', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 	
@@ -656,7 +656,7 @@ app.delete('/book/:id/delete', async function(request, response){
 	})
 })
 
-app.delete('/review/:id/delete', async function(request, response){
+app.delete('/review/:id', async function(request, response){
 	const authorizationHeaderValue = request.get("Authorization")
 	const accessToken = authorizationHeaderValue.substring(7)
 	

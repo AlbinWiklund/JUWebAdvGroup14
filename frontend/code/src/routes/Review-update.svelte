@@ -38,7 +38,7 @@
 		errorMessages = []
 
 		try {
-			const response = await fetch("http://localhost:8080/review/"+reviewId+"/update", {
+			const response = await fetch("http://localhost:8080/review/"+reviewId, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",

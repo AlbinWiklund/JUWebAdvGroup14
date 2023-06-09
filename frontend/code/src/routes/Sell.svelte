@@ -19,7 +19,7 @@
 		}
 
 		try {
-			const response = await fetch("http://localhost:8080/book/sell", {
+			const response = await fetch("http://localhost:8080/book/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

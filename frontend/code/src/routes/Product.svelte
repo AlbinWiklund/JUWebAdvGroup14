@@ -22,7 +22,7 @@
 	}
 	
 	async function deleteBook () {
-		const response = await fetch("http://localhost:8080/book/"+productId+"/delete", {
+		const response = await fetch("http://localhost:8080/book/"+productId, {
 				method: "DELETE",
 				headers: {
 					"Authorization": "Bearer "+$user.accessToken

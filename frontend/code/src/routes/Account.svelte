@@ -21,7 +21,7 @@
 	}
 	
 	async function deleteAccount () {
-		const response = await fetch("http://localhost:8080/account/"+$user.accountID+"/delete", {
+		const response = await fetch("http://localhost:8080/account/"+$user.accountID, {
 				method: "DELETE",
 				headers: {
 					"Authorization": "Bearer "+$user.accessToken
