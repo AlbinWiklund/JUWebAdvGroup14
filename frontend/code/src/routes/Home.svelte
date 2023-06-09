@@ -1,12 +1,14 @@
 <script>
 	import Card from "../lib/productCard.svelte"
 
+	const BACKEND_URL = "http://localhost:8080/"
+
 	let fetchSales = fetch("http://localhost:8080/books")
 
 	let category = ""
 
 	async function getBookByCategory(){
-		fetchSales = fetch("http://localhost:8080/books/bycategory?category="+category)
+		fetchSales = fetch(BACKEND_URL+"books/bycategory?category="+category)
 	}
 
 </script>

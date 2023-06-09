@@ -4,6 +4,8 @@
 
 	export let productId
 
+	const BACKEND_URL = "http://localhost:8080/"
+
 	let name = ""
 	let price = 0
 	let category = ""
@@ -14,16 +16,17 @@
 
 	async function getBook(){
 
-		const response = await fetch("http://localhost:8080/books/"+productId)
+		const response = await fetch(BACKEND_URL+"books/"+productId)
 
 		switch(response.status){
 			case 200:
-				const book = await response.json()
-				name = book[0].name
-				price = book[0].price
-				category = book[0].category
-				description = book[0].description
-				accountId = book[0].accountID
+				const books = await response.json()
+				const book = books[0]
+				name = book.name
+				price = book.price
+				category = book.category
+				description = book.description
+				accountId = book.accountID
 				break
 				
 			case 400:
@@ -49,7 +52,7 @@
 		}
 
 		try {
-			const response = await fetch("http://localhost:8080/book/"+productId,{
+			const response = await fetch(BACKEND_URL+"book/"+productId,{
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",

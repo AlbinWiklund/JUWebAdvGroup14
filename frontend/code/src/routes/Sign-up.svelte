@@ -1,4 +1,6 @@
 <script>
+	const BACKEND_URL = "http://localhost:8080/"
+
 	let username = ""
 	let name = ""
 	let surname = ""
@@ -14,7 +16,7 @@
 			password,
 		}
 		try {
-			const response = await fetch("http://localhost:8080/account/create", {
+			const response = await fetch(BACKEND_URL+"account/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"

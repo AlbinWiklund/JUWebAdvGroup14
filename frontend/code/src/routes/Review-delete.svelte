@@ -6,8 +6,10 @@
 
 	let reviewWasDeleted = false
 
+	const BACKEND_URL = "http://localhost:8080/"
+
 	async function deleteReview(){
-		const response = await fetch("http://localhost:8080/review/"+reviewId, {
+		const response = await fetch(BACKEND_URL+"review/"+reviewId, {
 				method: "DELETE",
 				headers: {
 					"Authorization": "Bearer "+$user.accessToken

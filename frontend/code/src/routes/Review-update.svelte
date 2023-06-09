@@ -3,6 +3,8 @@
 
 	export let reviewId;
 
+	const BACKEND_URL = "http://localhost:8080/"
+
 	let review = ""
 	let rating = 0
 	let reviewerId = 0
@@ -11,7 +13,7 @@
 	let errorMessages = []
 
 	async function getReview(){
-		const response = await fetch("http://localhost:8080/review/"+reviewId)
+		const response = await fetch(BACKEND_URL+"review/"+reviewId)
 
 		switch (response.status){
 			case 200:

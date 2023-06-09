@@ -3,6 +3,8 @@
 
 	export let accountId;
 
+	const BACKEND_URL = "http://localhost:8080/"
+
 	let username = ""
 	let name = ""
 	let surname = ""
@@ -11,7 +13,7 @@
 	let errorMessages = []
 
 	async function getAccount(){
-		const response = await fetch("http://localhost:8080/account/"+accountId)
+		const response = await fetch(BACKEND_URL+"account/"+accountId)
 
 		switch (response.status){
 			case 200:
@@ -21,7 +23,7 @@
 				surname = account[0].surname
 				break
 			case 500:
-				errorMessages = await response.json()
+				errorMessages.push("Error: Can't load account")
 				break
 		}
 	}

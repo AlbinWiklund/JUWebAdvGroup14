@@ -5,11 +5,13 @@
 
 	export let accountId;
 
+	const BACKEND_URL = "http://localhost:8080/"
+
 	let deleteInProgress
 	let modalOpen = false
 	let accountDeleted = false
 	
-	const fetchAccountPromise = fetch("http://localhost:8080/accounts/"+accountId)
+	const fetchAccountPromise = fetch(BACKEND_URL+"account/"+accountId+"/books/reviews")
 	
 	const openModal = () => {
 		modalOpen = true;
@@ -21,7 +23,7 @@
 	}
 	
 	async function deleteAccount () {
-		const response = await fetch("http://localhost:8080/account/"+$user.accountID, {
+		const response = await fetch(BACKEND_URL+"account/"+$user.accountID, {
 				method: "DELETE",
 				headers: {
 					"Authorization": "Bearer "+$user.accessToken

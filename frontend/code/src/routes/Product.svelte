@@ -4,8 +4,10 @@
 	import Modal from "../lib/deleteModal.svelte"
 
 	export let productId;
+
+	const BACKEND_URL = "http://localhost:8080/"
 	
-	const fetchProductPromise = fetch("http://localhost:8080/books/"+productId)
+	const fetchProductPromise = fetch(BACKEND_URL+"books/"+productId)
 
 	let deleteInProgress
 	let modalOpen = false
@@ -22,7 +24,7 @@
 	}
 	
 	async function deleteBook () {
-		const response = await fetch("http://localhost:8080/book/"+productId, {
+		const response = await fetch(BACKEND_URL+"book/"+productId, {
 				method: "DELETE",
 				headers: {
 					"Authorization": "Bearer "+$user.accessToken

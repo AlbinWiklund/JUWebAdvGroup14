@@ -2,13 +2,15 @@
 	import { user } from "../user-store.js"
 	import jwt_decode from 'jwt-decode'
 
+	const BACKEND_URL = "http://localhost:8080/"
+
 	let username = ""
 	let password = ""
 
 	let errorMessages = []
 	
 	async function signin(){
-		const response = await fetch("http://localhost:8080/tokens", {
+		const response = await fetch(BACKEND_URL+"tokens", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"

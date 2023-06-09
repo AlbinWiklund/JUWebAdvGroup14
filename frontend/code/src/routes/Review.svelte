@@ -3,6 +3,8 @@
 
 	export let productId;
 
+	const BACKEND_URL = "http://localhost:8080/"
+
 	let review = ""
 	let rating = 0
 	let reviewerId = $user.accountID
@@ -18,7 +20,7 @@
 		}
 
 		try {
-			const response = await fetch("http://localhost:8080/book/"+productId+"/review", {
+			const response = await fetch(BACKEND_URL+"book/"+productId+"/review", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

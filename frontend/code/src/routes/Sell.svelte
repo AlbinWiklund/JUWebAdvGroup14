@@ -1,6 +1,8 @@
 <script>
 	import { user } from "../user-store.js"
 
+	const BACKEND_URL = "http://localhost:8080/"
+
 	let name = ""
 	let price = 0
 	let category = ""
@@ -19,7 +21,7 @@
 		}
 
 		try {
-			const response = await fetch("http://localhost:8080/book/create", {
+			const response = await fetch(BACKEND_URL+"book/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -36,6 +38,10 @@
 					break
 
 				case 400:
+					errorMessages = await response.json()
+					break
+
+				case 401:
 					errorMessages = await response.json()
 					break
 			}
